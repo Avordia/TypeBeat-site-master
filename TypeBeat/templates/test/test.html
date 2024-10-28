@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Site</title>
+</head>
+<body>
+    <h1>Test Site</h1>
+
+    <h2>Add User</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        <button type="submit" name="user_submit">Add User</button>
+    </form>
+
+    <h2>Add Music</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ music_form.as_p }}
+        <button type="submit" name="music_submit">Add Music</button>
+    </form>
+
+    <h2>Add BeatPack</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ beatpack_form.as_p }}
+        <button type="submit" name="beatpack_submit">Add BeatPack</button>
+    </form>
+
+    <h2>Add Beatmap</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ beatmap_form.as_p }}
+        <button type="submit" name="beatmap_submit">Add Beatmap</button>
+    </form>
+
+    <h2>Add Highscore</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ highscore_form.as_p }}
+        <button type="submit" name="highscore_submit">Add Highscore</button>
+    </form>
+</body>
+</html>

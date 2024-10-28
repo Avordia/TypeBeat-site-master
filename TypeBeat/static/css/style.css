@@ -1,0 +1,82 @@
+body {
+    background-color: #121212; /* Dark grey background */
+    color: #e0e0e0; /* Light grey text for contrast */
+    font-family: Arial, sans-serif; /* Font style */
+    margin: 0;
+    height: 100vh; /* Full viewport height */
+    display: flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+}
+
+.centered-container {
+    background-color: rgba(18, 18, 18, 0.8); /* Slightly transparent dark background */
+    padding: 20px; /* Padding for the container */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); /* Shadow for depth */
+    text-align: center; /* Center text */
+}
+
+.logo {
+    width: 300px; /* Set a fixed width for the logo */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 20px; /* Space below the logo */
+}
+
+h2 {
+    margin-bottom: 20px; /* Space below the heading */
+    color: #ff8c00; /* Orange color for heading */
+}
+
+label {
+    display: block; /* Labels should be block elements */
+    margin-bottom: 5px; /* Space below labels */
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"] { /* Include input[type="email"] */
+    width: 100%; /* Full width for input fields */
+    padding: 10px; /* Padding for input fields */
+    margin-bottom: 15px; /* Space below input fields */
+    border: 1px solid #444; /* Dark border */
+    border-radius: 4px; /* Slightly rounded borders */
+    background-color: #222; /* Dark input background */
+    color: #e0e0e0; /* Light text in input */
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus { /* Include focus styles for email */
+    border-color: #ff8c00; /* Orange border on focus */
+    outline: none; /* Remove default outline */
+}
+
+button {
+    background-color: #ff8c00; /* Orange button background */
+    color: #121212; /* Dark text on button */
+    border: none; /* No border */
+    padding: 10px 20px; /* Button padding */
+    border-radius: 4px; /* Slightly rounded button */
+    cursor: pointer; /* Pointer on hover */
+    font-size: 16px; /* Font size for button */
+    transition: background-color 0.3s ease; /* Smooth background change */
+}
+
+button:hover {
+    background-color: #e07b00; /* Darker orange on hover */
+}
+
+.signup-link {
+    color: white; /* White color for the link */
+    margin-top: 15px; /* Space above the link */
+}
+
+.signup-link a {
+    text-decoration: none; /* Remove underline */
+    color: #ff8c00; /* Orange color for the link */
+}
+
+.signup-link a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
