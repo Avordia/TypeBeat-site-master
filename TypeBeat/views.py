@@ -1,10 +1,23 @@
+# views.py
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from datetime import datetime
 from .forms import UserForm, MusicForm, BeatPackForm, BeatmapForm, HighscoreForm, SignupForm, LoginForm
 from django.contrib import messages
 from .models import User
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            messages.success(request, 'Signup successful! You can now log in.')
+            return redirect('login')
+    else:
+        form = SignupForm()
+    return render(request, 'SignUp/SignUp.html', {'form': form})
 
 def home(request):
     return HttpResponse("Hello, Django!")
@@ -19,19 +32,6 @@ def homepage(request, name):
             'date': datetime.now()
         }
     )
-
-def signup(request):
-    if request.method == 'POST':
-        form = SignupForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])  # Hash the password
-            user.save()
-            messages.success(request, 'Signup successful! You can now log in.')
-            return redirect('login')
-    else:
-        form = SignupForm()
-    return render(request, 'SignUp/SignUp.html', {'form': form})
 
 def login_view(request):
     if request.method == 'POST':

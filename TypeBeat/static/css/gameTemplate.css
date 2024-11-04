@@ -1,0 +1,24 @@
+.navbar{
+    width: 95%;
+    margin: auto;
+    padding: 35px 0;
+    display: flex;
+    align-items: center;
+    background-color: black;
+    color:white
+}
+
+.navLogo{
+    width:120px;
+    cursor: pointer;
+}
+
+.navbar ul li{
+    list-style:none;
+    display: inline-block;
+    margin: 0 20px;
+}
+
+.navbar ul li a{
+    text-decoration: none;
+}
