@@ -5,20 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"> 
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <div class="centered-container">
-        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo"> 
+        <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
         <h2>Sign Up</h2>
         <div class="form-container">
             <form action="{% url 'signup' %}" method="post">
                 {% csrf_token %}
+                
+                <!-- Display general form errors -->
+                {% if form.non_field_errors %}
+                    <div class="error-message">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
+                
+                <!-- Display username field errors -->
+                {% if form.username.errors %}
+                    <div class="error-message">
+                        {% for error in form.username.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required>
+                
+                <!-- Display email field errors -->
+                {% if form.email.errors %}
+                    <div class="error-message">
+                        {% for error in form.email.errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>

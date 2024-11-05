@@ -8,6 +8,12 @@ body {
     justify-content: center; 
     align-items: center; 
 }
+.error-message {
+    color: #ff4d4d; 
+    font-size: 0.8em; 
+    margin-bottom: 10px; 
+    text-align: center; 
+}
 
 header {
     background-color:#000000

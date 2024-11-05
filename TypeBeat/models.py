@@ -1,4 +1,3 @@
-# models.py
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
@@ -21,12 +20,17 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=255, unique=True)
-    email = models.EmailField(unique=True)
-    bio = models.TextField(blank=True, null=True)  # New field for user bio
-    join_date = models.DateTimeField(auto_now_add=True)  # New field for join date
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    username = models.CharField(max_length=30, unique=True)
+    email = models.EmailField(max_length=60, unique=True)
+    password = models.CharField(max_length=30)  
+    profile_picture = models.ImageField(
+    upload_to='Profile/',
+    default='Profile/DefaultProfile.png',  
+    null=True,
+    blank=True
+)
+
+    is_staff = models.BooleanField(default=False)  
 
     objects = UserManager()
 
@@ -36,42 +40,45 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
 
-class Music(models.Model):
-    music_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
-    author = models.CharField(max_length=255)
-    genre = models.CharField(max_length=100, blank=True, null=True)  # New genre field
-    release_date = models.DateField(blank=True, null=True)  # New release date field
 
-    def __str__(self):
-        return f'{self.title} by {self.author}'
-
-class BeatPack(models.Model):
+class Beatpack(models.Model):
     beatpack_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)  # New field for description
-    music = models.ForeignKey(Music, on_delete=models.CASCADE)
+    beatpack_title = models.CharField(max_length=30)
+    music_author = models.CharField(max_length=30)
+    no_of_beatmaps = models.IntegerField()
+    no_of_downloads = models.IntegerField()
+    beatpack_picture = models.ImageField(upload_to='beatpack_pictures/', null=True, blank=True)
 
     def __str__(self):
-        return self.title
+        return self.beatpack_title
+
 
 class Beatmap(models.Model):
     beatmap_id = models.AutoField(primary_key=True)
-    title = models.CharField(max_length=255)
-    difficulty = models.CharField(max_length=100)
-    max_score = models.IntegerField(default=100)  # New field for max score
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    beatpack = models.ForeignKey(BeatPack, on_delete=models.CASCADE)
+    mapmaker = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_beatmaps")
+    beatpack = models.ForeignKey(Beatpack, on_delete=models.CASCADE)
+    beatmap_title = models.CharField(max_length=30)
+    difficulty = models.PositiveSmallIntegerField()
+    total_note_count = models.IntegerField()
+    no_of_letters = models.IntegerField(null=True, blank=True)
+    no_of_spaces = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.title} - {self.difficulty}'
+        return f'{self.beatmap_title} - {self.difficulty}'
+
 
 class Highscore(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="highscores")
     beatmap = models.ForeignKey(Beatmap, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    score = models.IntegerField()
-    accuracy = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)  # New accuracy field
-    date_finished = models.DateTimeField()
+    mapmaker = models.ForeignKey(User, on_delete=models.CASCADE, related_name="mapmaker_highscores")
+    beatpack = models.ForeignKey(Beatpack, on_delete=models.CASCADE)
+    total_score = models.IntegerField()
+    highest_combo = models.IntegerField()
+    accuracy = models.FloatField()
+    perfect = models.IntegerField(null=True, blank=True)
+    great = models.IntegerField(null=True, blank=True)
+    good = models.IntegerField(null=True, blank=True)
+    miss = models.IntegerField(null=True, blank=True)
 
     class Meta:
         constraints = [
@@ -79,4 +86,4 @@ class Highscore(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.user.username} - {self.score} on {self.beatmap.title}'
+        return f'{self.user.username} - {self.total_score} on {self.beatmap.beatmap_title}'
