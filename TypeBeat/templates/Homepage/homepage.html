@@ -13,7 +13,7 @@
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
             <ul>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage'}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
