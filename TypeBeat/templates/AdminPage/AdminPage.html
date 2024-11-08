@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Page</title>
+    <style>
+        /* Basic styling */
+        table { width: 100%; border-collapse: collapse; }
+        table, th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .editable:hover { background-color: #e2f7e2; cursor: pointer; }
+        .delete-btn { color: red; cursor: pointer; }
+        img { width: 50px; height: 50px; }
+    </style>
+</head>
+<body>
+    <h1>Admin Page</h1>
+
+    <div class="forms">
+        <h2>Add User</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ user_form.as_p }}
+            <button type="submit" name="user_submit">Add User</button>
+        </form>
+
+        <h2>Add Beatpack</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ beatpack_form.as_p }}
+            <button type="submit" name="beatpack_submit">Add Beatpack</button>
+        </form>
+
+        <h2>Add Beatmap</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ beatmap_form.as_p }}
+            <button type="submit" name="beatmap_submit">Add Beatmap</button>
+        </form>
+
+        <h2>Add Highscore</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ highscore_form.as_p }}
+            <button type="submit" name="highscore_submit">Add Highscore</button>
+        </form>
+    </div>
+
+    <div class="tables">
+        <!-- Users Table -->
+        <h2>Users</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>Profile Picture</th>
+                    <th>Is Staff</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.user_id }}</td>
+                    <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="username">{{ user.username }}</td>
+                    <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="email">{{ user.email }}</td>
+                    <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="password">{{ user.password }}</td>
+                    <td>
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="is_staff">{{ user.is_staff }}</td>
+                    <td><span class="delete-btn" data-model="user" data-id="{{ user.user_id }}">Delete</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Beatpacks Table -->
+        <h2>Beatpacks</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>No. of Beatmaps</th>
+                    <th>No. of Downloads</th>
+                    <th>Beatpack Picture</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for beatpack in beatpacks %}
+                <tr>
+                    <td>{{ beatpack.beatpack_id }}</td>
+                    <td class="editable" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}" data-field="beatpack_title">{{ beatpack.beatpack_title }}</td>
+                    <td class="editable" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}" data-field="music_author">{{ beatpack.music_author }}</td>
+                    <td class="editable" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}" data-field="no_of_beatmaps">{{ beatpack.no_of_beatmaps }}</td>
+                    <td class="editable" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}" data-field="no_of_downloads">{{ beatpack.no_of_downloads }}</td>
+                    <td>
+                        {% if beatpack.beatpack_picture %}
+                            <img src="{{ beatpack.beatpack_picture.url }}" alt="Beatpack Picture">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                    <td><span class="delete-btn" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}">Delete</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Beatmaps Table -->
+        <h2>Beatmaps</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Difficulty</th>
+                    <th>Total Notes</th>
+                    <th>No. of Letters</th>
+                    <th>No. of Spaces</th>
+                    <th>Mapmaker</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for beatmap in beatmaps %}
+                <tr>
+                    <td>{{ beatmap.beatmap_id }}</td>
+                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="beatmap_title">{{ beatmap.beatmap_title }}</td>
+                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="difficulty">{{ beatmap.difficulty }}</td>
+                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="total_note_count">{{ beatmap.total_note_count }}</td>
+                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="no_of_letters">{{ beatmap.no_of_letters }}</td>
+                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="no_of_spaces">{{ beatmap.no_of_spaces }}</td>
+                    <td>{{ beatmap.mapmaker.username }}</td>
+                    <td><span class="delete-btn" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}">Delete</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Highscores Table -->
+        <h2>Highscores</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Beatmap</th>
+                    <th>Mapmaker</th>
+                    <th>Beatpack</th>
+                    <th>Total Score</th>
+                    <th>Highest Combo</th>
+                    <th>Accuracy</th>
+                    <th>Perfect</th>
+                    <th>Great</th>
+                    <th>Good</th>
+                    <th>Miss</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for highscore in highscores %}
+                <tr>
+                    <td>{{ highscore.user.username }}</td>
+                    <td>{{ highscore.beatmap.beatmap_title }}</td>
+                    <td>{{ highscore.mapmaker.username }}</td>
+                    <td>{{ highscore.beatpack.beatpack_title }}</td>
+                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="total_score">{{ highscore.total_score }}</td>
+                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="highest_combo">{{ highscore.highest_combo }}</td>
+                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="accuracy">{{ highscore.accuracy }}</td>
+                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="perfect">{{ highscore.perfect }}</td>
+                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="great">{{ highscore.great }}</td>
+                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="good">{{ highscore.good }}</td>
+                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="miss">{{ highscore.miss }}</td>
+                    <td><span class="delete-btn" data-model="highscore" data-id="{{ highscore.id }}">Delete</span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Inline edit
+            document.querySelectorAll('.editable').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const originalText = cell.innerText;
+                    const input = document.createElement("input");
+                    input.value = originalText;
+                    cell.innerHTML = "";
+                    cell.appendChild(input);
+                    input.focus();
+
+                    input.addEventListener("blur", function() {
+                        cell.innerHTML = originalText;
+                    });
+
+                    input.addEventListener("keydown", function(event) {
+                        if (event.key === "Enter") {
+                            const model = cell.getAttribute("data-model");
+                            const objId = cell.getAttribute("data-id");
+                            const field = cell.getAttribute("data-field");
+                            const newValue = input.value;
+
+                            fetch(`/update/${model}/${objId}/`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded",
+                                    "X-CSRFToken": "{{ csrf_token }}"
+                                },
+                                body: `field_name=${field}&value=${newValue}`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === "success") {
+                                    cell.innerText = data.value;
+                                } else {
+                                    cell.innerText = originalText;
+                                    alert("Error updating data.");
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+
+            // Delete functionality
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const model = button.getAttribute("data-model");
+                    const objId = button.getAttribute("data-id");
+
+                    if (confirm("Are you sure you want to delete this item?")) {
+                        fetch(`/delete/${model}/${objId}/`, {
+                            method: "POST",
+                            headers: {
+                                "X-CSRFToken": "{{ csrf_token }}"
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                button.closest("tr").remove();
+                            } else {
+                                alert("Error deleting data.");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
