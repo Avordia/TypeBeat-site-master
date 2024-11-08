@@ -1,22 +1,81 @@
 {% load static %}
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Dashboard</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}"> 
-    </head>
-    <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Game - Homepage</title>
+    <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+</head>
+<body>
+    <header>
         <div class="navbar">
-            <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo"> 
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
             <ul>
-                <li><a href="{% url 'signup' %}" class="navLinks"><a/>Home</li>
-                <li><a href="{% url 'signup' %}" class="navLinks"><a/>Beatmap</li>
-                <li><a href="{% url 'signup' %}" class="navLinks"><a/>Ranking</li>
-                <li><a href="{% url 'signup' %}" class="navLinks"><a/>Your Creations</li>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'homepage'}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
             </ul>
         </div>
-        <strong>Hello there, {{ name }}!</strong> 
-    </body>
+    </header>
+
+    <main>
+        <section class="hero">
+            <video autoplay muted loop class="background-video">
+                <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="hero-content">
+                <h1>Welcome to TypeBeat!</h1>
+                <p>Type through the Rhytmn!</p>
+                <a href="{% url 'signup' %}" class="cta-button">Download Now!</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <h2>Game Features</h2>
+            <div class="feature">
+                <h3>Exciting Beatmaps</h3>
+                <p>Explore a variety of beatmaps created by talented mapmakers.</p>
+            </div>
+            <div class="feature">
+                <h3>Compete with Friends</h3>
+                <p>Challenge your friends and see who has the highest score!</p>
+            </div>
+            <div class="feature">
+                <h3>Create Your Own</h3>
+                <p>Design and share your own beatmaps with the community.</p>
+            </div>
+        </section>
+
+        <section class="beatmaps">
+            <h2>Popular Beatmaps</h2>
+            <div class="beatmap-list">
+                {% for beatmap in beatmaps %}
+                <div class="beatmap-card">
+                    <h3>{{ beatmap.beatmap_title }}</h3>
+                    <p>Difficulty: {{ beatmap.difficulty }}</p>
+                    <p>Mapmaker: {{ beatmap.mapmaker.username }}</p>
+                    <a href="{% url 'beatmap_detail' beatmap_id=beatmap.beatmap_id %}" class="beatmap-button">Play Now</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="ranking">
+            <h2>Top Players</h2>
+            <ol class="ranking-list">
+                {% for user in top_users %}
+                <li>{{ user.username }} - {{ user.highscore }} points</li>
+                {% endfor %}
+            </ol>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Rhythm Game. All rights reserved.</p>
+    </footer>
+</body>
 </html>
