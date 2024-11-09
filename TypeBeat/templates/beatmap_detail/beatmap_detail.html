@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ beatmap.beatmap_title }}</title>
+</head>
+<body>
+    <h1>{{ beatmap.beatmap_title }}</h1>
+    <p>Difficulty: {{ beatmap.difficulty }}</p>
+    <p>Mapmaker: {{ beatmap.mapmaker.username }}</p>
+    <a href="{% url 'homepage' %}">Back to Homepage</a>
+</body>
+</html>

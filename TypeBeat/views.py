@@ -13,15 +13,23 @@ def home(request):
     return HttpResponse("Hello, Django!")
 
 def homepage(request, name):
-    print(request.build_absolute_uri())
+    beatmaps = Beatmap.objects.all()  # Query all beatmaps
+    top_users = User.objects.order_by('-highscores')[:10]  # Query top 10 users by highscore
+
     return render(
         request,
         'Homepage/homepage.html',
         {
             'name': name,
-            'date': datetime.now()
+            'date': datetime.now(),
+            'beatmaps': beatmaps,
+            'top_users': top_users,
         }
     )
+
+def beatmap_detail(request, beatmap_id):
+    beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
+    return render(request, 'beatmap_detail.html', {'beatmap': beatmap})
 
 def signup(request):
     if request.method == 'POST':

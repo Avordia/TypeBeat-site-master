@@ -12,4 +12,5 @@ urlpatterns = [
 
     path('update/<str:model_name>/<int:obj_id>/', views.update_field, name='update_field'),
     path('delete/<str:model_name>/<int:obj_id>/', views.delete_item, name='delete_item'),
+    path('beatmap/<int:beatmap_id>/', views.beatmap_detail, name='beatmap_detail'),
 ]
