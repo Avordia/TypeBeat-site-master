@@ -42,11 +42,24 @@ header {
     text-decoration: underline;
 }
 
-.hero {
+.hero{
     text-align: center;
     padding: 50px 20px;
-    background-color: #333; /* Slightly lighter background for hero */
+    align-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    background-size: cover;
 }
+.hero-overlay {
+    background: url('{{ background_image_url }}') center center;
+}
+
+.hero-content {
+    color: #000000;
+}
+
 
 .cta-button {
     background-color: #ff6600; /* Orange button */

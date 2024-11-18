@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rhythm Game - Homepage</title>
     <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+    <style>
+        .hero {
+            background: url("{% static 'images/typeBeat.gif' %}") center center;
+            background-size: cover;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -13,7 +19,7 @@
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
             <ul>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'BeatPack_Upload' name=user.username %}" class="navLinks">Upload BeatPack</a></li>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
@@ -23,14 +29,12 @@
 
     <main>
         <section class="hero">
-            <video autoplay muted loop class="background-video">
-                <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <div class="hero-content">
-                <h1>Welcome to TypeBeat!</h1>
-                <p>Type through the Rhytmn!</p>
-                <a href="{% url 'signup' %}" class="cta-button">Download Now!</a>
+            <div class="hero-overlay">
+                <div class="hero-content">
+                    <h1>Welcome to TypeBeat!</h1>
+                    <p>Type through the Rhytmn!</p>
+                    <a href="{% url 'signup' %}" class="cta-button">Download Now!</a>
+                </div>
             </div>
         </section>
 

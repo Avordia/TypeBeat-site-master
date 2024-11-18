@@ -9,8 +9,10 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('login/', views.login_view, name='login'),
     path('AdminPage/', views.AdminPage, name='AdminPage'),
+    path('BeatPack_Upload/<str:name>/', views.BeatPack_Upload, name='BeatPack_Upload'),
+
 
     path('update/<str:model_name>/<int:obj_id>/', views.update_field, name='update_field'),
     path('delete/<str:model_name>/<int:obj_id>/', views.delete_item, name='delete_item'),
     path('beatmap/<int:beatmap_id>/', views.beatmap_detail, name='beatmap_detail'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

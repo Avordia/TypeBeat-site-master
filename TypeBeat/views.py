@@ -27,6 +27,17 @@ def homepage(request, name):
         }
     )
 
+def BeatPack_Upload(request, name):
+    if request.method == 'POST':
+        form = BeatPackForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('homepage', name=request.user.username)
+    else:
+        form = BeatPackForm()
+
+    return render(request, 'BeatPack_Upload/BeatPack_Upload.html', {'beatpack_form': form})
+
 def beatmap_detail(request, beatmap_id):
     beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
     return render(request, 'beatmap_detail.html', {'beatmap': beatmap})
@@ -87,7 +98,6 @@ def AdminPage(request):
 
     if request.method == 'POST':
         if 'user_submit' in request.POST:
-            # Handle user form submission with file handling
             user_form = UserForm(request.POST, request.FILES)
             if user_form.is_valid():
                 try:
@@ -96,7 +106,6 @@ def AdminPage(request):
                     user_form.add_error(None, 'A user with this username or email already exists.')
 
         elif 'beatpack_submit' in request.POST:
-            # Handle beatpack form submission with file handling
             beatpack_form = BeatPackForm(request.POST, request.FILES)
             if beatpack_form.is_valid():
                 try:
@@ -105,7 +114,6 @@ def AdminPage(request):
                     beatpack_form.add_error(None, 'A beatpack with this title already exists.')
 
         elif 'beatmap_submit' in request.POST:
-            # Handle beatmap form submission
             beatmap_form = BeatmapForm(request.POST)
             if beatmap_form.is_valid():
                 try:
@@ -114,7 +122,6 @@ def AdminPage(request):
                     beatmap_form.add_error(None, 'A beatmap with this title already exists.')
 
         elif 'highscore_submit' in request.POST:
-            # Handle highscore form submission
             highscore_form = HighscoreForm(request.POST)
             if highscore_form.is_valid():
                 try:
@@ -122,13 +129,11 @@ def AdminPage(request):
                 except IntegrityError:
                     highscore_form.add_error(None, 'A highscore for this user and beatmap already exists.')
 
-    # Query all entries to display in the template
     users = User.objects.all()
     beatpacks = Beatpack.objects.all()
     beatmaps = Beatmap.objects.all()
     highscores = Highscore.objects.all()
 
-    # Prepare context
     context = {
         'user_form': user_form,
         'beatpack_form': beatpack_form,
@@ -141,6 +146,7 @@ def AdminPage(request):
     }
 
     return render(request, 'AdminPage/AdminPage.html', context)
+
 def update_field(request, model_name, obj_id):
     if request.method == 'POST':
         field_name = request.POST.get('field_name')

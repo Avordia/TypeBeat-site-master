@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Game - Homepage</title>
+    <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
+            <ul>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <section class="upload-beatpack">
+            <h2>Upload Beatpack</h2>
+                <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ beatpack_form.as_p }}
+                <button type="submit">Upload Beatpack</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Rhythm Game. All rights reserved.</p>
+    </footer>
+</body>
+</html>
