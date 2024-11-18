@@ -71,8 +71,8 @@
         <section class="ranking">
             <h2>Top Players</h2>
             <ol class="ranking-list">
-                {% for user in top_users %}
-                <li>{{ user.username }} - {{ user.highscores }} points</li>
+                {% for highscore in top_highscores %}
+                <li>{{ highscore.user }} - {{ highscore.total_score }} points</li>
                 {% endfor %}
             </ol>
         </section>

@@ -14,7 +14,7 @@ def home(request):
 
 def homepage(request, name):
     beatmaps = Beatmap.objects.all()  # Query all beatmaps
-    top_users = User.objects.order_by('-highscores')[:10]  # Query top 10 users by highscore
+    top_highscores = Highscore.objects.order_by('-total_score')[:10]  # Query top 10 users by highscore
 
     return render(
         request,
@@ -23,7 +23,7 @@ def homepage(request, name):
             'name': name,
             'date': datetime.now(),
             'beatmaps': beatmaps,
-            'top_users': top_users,
+            'top_highscores': top_highscores,
         }
     )
 
@@ -37,6 +37,9 @@ def BeatPack_Upload(request, name):
         form = BeatPackForm()
 
     return render(request, 'BeatPack_Upload/BeatPack_Upload.html', {'beatpack_form': form})
+
+def logout_view(request):
+    return HttpResponse("You have been logged out.")
 
 def beatmap_detail(request, beatmap_id):
     beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
