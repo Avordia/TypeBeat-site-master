@@ -2,7 +2,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from datetime import datetime
-from .forms import BeatPackForm, SignupForm, LoginForm
+from .forms import BeatPackForm, SignupForm, LoginForm,UploadForm
 from django.contrib import messages
 from .models import User, Beatpack, Beatmap, Highscore
 from django.db.utils import IntegrityError
@@ -29,14 +29,14 @@ def homepage(request, name):
 
 def BeatPack_Upload(request, name):
     if request.method == 'POST':
-        form = BeatPackForm(request.POST, request.FILES)
+        form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('homepage', name=request.user.username)
     else:
-        form = BeatPackForm()
+        form = UploadForm()
 
-    return render(request, 'BeatPack_Upload/BeatPack_Upload.html', {'beatpack_form': form})
+    return render(request, 'BeatPack_Upload/BeatPack_Upload.html', {'UploadForm': form})
 
 def logout_view(request):
     return HttpResponse("You have been logged out.")
@@ -101,6 +101,7 @@ def AdminPage(request):
 
     if request.method == 'POST':
         if 'user_submit' in request.POST:
+            # Handle user form submission with file handling
             user_form = UserForm(request.POST, request.FILES)
             if user_form.is_valid():
                 try:

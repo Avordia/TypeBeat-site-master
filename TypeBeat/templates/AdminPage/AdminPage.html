@@ -39,11 +39,11 @@
             <button type="submit" name="beatmap_submit">Add Beatmap</button>
         </form>
 
-        <h2>Add Highscore</h2>
-        <form method="POST">
+        <form method="post">
             {% csrf_token %}
+            <input type="hidden" name="highscore_id" value="{{ highscore.id }}">
             {{ highscore_form.as_p }}
-            <button type="submit" name="highscore_submit">Add Highscore</button>
+            <button type="submit" name="highscore_submit">Submit</button>
         </form>
     </div>
 

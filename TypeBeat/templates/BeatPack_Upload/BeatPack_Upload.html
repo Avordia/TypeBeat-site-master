@@ -26,8 +26,8 @@
         <section class="upload-beatpack">
             <h2>Upload Beatpack</h2>
                 <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ beatpack_form.as_p }}
+                {% csrf_token %}    
+                {{ UploadForm.as_p }}
                 <button type="submit">Upload Beatpack</button>
             </form>
         </section>

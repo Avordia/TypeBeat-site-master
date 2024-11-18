@@ -50,6 +50,15 @@ class BeatPackForm(forms.ModelForm):
             'no_of_downloads',
             'beatpack_picture'
         ]
+class UploadForm(forms.ModelForm):
+    class Meta:
+        model = Beatpack
+        fields = [
+            'beatpack_title',
+            'music_author',
+            'no_of_beatmaps',
+            'beatpack_picture'
+        ]
 
 
 class BeatmapForm(forms.ModelForm):
