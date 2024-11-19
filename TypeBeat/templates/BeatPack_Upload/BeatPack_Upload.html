@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rhythm Game - Homepage</title>
-    <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Upload.css' %}">
 
 </head>
 <body>
@@ -25,12 +25,24 @@
     <main>
         <section class="upload-beatpack">
             <h2>Upload Beatpack</h2>
-                <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}    
-                {{ UploadForm.as_p }}
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="id_beatpack_title">Beatpack Title:</label>
+                <input type="text" id="id_beatpack_title" name="beatpack_title">
+        
+                <label for="id_music_author">Music Author:</label>
+                <input type="text" id="id_music_author" name="music_author">
+        
+                <label for="id_no_of_beatmaps">Number of Beatmaps:</label>
+                <input type="number" id="id_no_of_beatmaps" name="no_of_beatmaps">
+        
+                <label for="id_beatpack_picture">Beatpack Picture:</label>
+                <input type="file" id="id_beatpack_picture" name="beatpack_picture">
+        
                 <button type="submit">Upload Beatpack</button>
             </form>
         </section>
+
     </main>
 
     <footer>
