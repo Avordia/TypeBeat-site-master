@@ -1,11 +1,9 @@
-from django.shortcuts import redirect, render
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
-from .forms import BeatPackForm, SignupForm, LoginForm,UploadForm
+from .forms import SignupForm, LoginForm,UploadForm
 from django.contrib import messages
-from .models import User, Beatpack, Beatmap, Highscore
-from django.db.utils import IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 
@@ -13,7 +11,7 @@ def home(request):
     return HttpResponse("Hello, Django!")
 
 def homepage(request, name):
-    beatmaps = Beatmap.objects.all()  # Query all beatmaps
+    beatpacks = Beatpack.objects.all()  # Query all beatpacks
     top_highscores = Highscore.objects.order_by('-total_score')[:10]  # Query top 10 users by highscore
 
     return render(
@@ -22,7 +20,7 @@ def homepage(request, name):
         {
             'name': name,
             'date': datetime.now(),
-            'beatmaps': beatmaps,
+            'beatpacks': beatpacks,
             'top_highscores': top_highscores,
         }
     )
@@ -39,11 +37,13 @@ def BeatPack_Upload(request, name):
     return render(request, 'BeatPack_Upload/BeatPack_Upload.html', {'UploadForm': form})
 
 def logout_view(request):
-    return HttpResponse("You have been logged out.")
+    logout(request)
+    return redirect('login')
 
-def beatmap_detail(request, beatmap_id):
-    beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
-    return render(request, 'beatmap_detail.html', {'beatmap': beatmap})
+def beatpack_detail(request, beatpack_id):
+    beatpack = get_object_or_404(Beatpack, pk=beatpack_id)
+    beatmaps = Beatmap.objects.filter(beatpack_id=beatpack_id)
+    return render(request, 'beatpack_detail/beatpack_detail.html', {'beatpack': beatpack, 'beatmaps': beatmaps})
 
 def signup(request):
     if request.method == 'POST':
@@ -73,16 +73,15 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            print(f"Username: {username}, Password: {password}")
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('homepage', name=user.username)  # Redirects to homepage with the username
+                if user.is_staff:  # Check if the user is an admin
+                    return redirect('AdminPage')  # Redirect to the custom admin page
+                else:
+                    return redirect('homepage', name=user.username)  # Redirect to the homepage with the username
             else:
-                print("Authentication failed")
                 messages.error(request, 'Invalid username or password.')
-        else:
-            print("Form is invalid")
     else:
         form = LoginForm()
     return render(request, 'Login/Login.html', {'form': form})
@@ -91,7 +90,7 @@ from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from .forms import UserForm, BeatPackForm, BeatmapForm, HighscoreForm
 from .models import User, Beatpack, Beatmap, Highscore
-
+@staff_member_required
 def AdminPage(request):
     # Initialize forms
     user_form = UserForm()
@@ -126,7 +125,15 @@ def AdminPage(request):
                     beatmap_form.add_error(None, 'A beatmap with this title already exists.')
 
         elif 'highscore_submit' in request.POST:
-            highscore_form = HighscoreForm(request.POST)
+            user = request.POST.get('user')
+            beatmap = request.POST.get('beatmap')
+
+            highscore = Highscore.objects.filter(user_id=user, beatmap_id=beatmap).first()
+            if not highscore:
+                highscore_form = HighscoreForm(request.POST)
+            else:
+                highscore_form = HighscoreForm(request.POST, instance=highscore)
+
             if highscore_form.is_valid():
                 try:
                     highscore_form.save()
@@ -174,16 +181,17 @@ def update_field(request, model_name, obj_id):
 
 # View to delete an item
 def delete_item(request, model_name, obj_id):
-    model_mapping = {
-        'user': User,
-        'beatpack': Beatpack,
-        'beatmap': Beatmap,
-        'highscore': Highscore,
-    }
+    if request.method == 'POST':
+        model_mapping = {
+            'user': User,
+            'beatpack': Beatpack,
+            'beatmap': Beatmap,
+            'highscore': Highscore,
+        }
 
-    Model = model_mapping.get(model_name.lower())
-    if Model:
-        obj = get_object_or_404(Model, pk=obj_id)
-        obj.delete()
-        return JsonResponse({'status': 'success'})
+        Model = model_mapping.get(model_name.lower())
+        if Model:
+            obj = get_object_or_404(Model, pk=obj_id)
+            obj.delete()
+            return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error'})

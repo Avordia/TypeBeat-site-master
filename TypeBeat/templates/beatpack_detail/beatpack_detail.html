@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ beatpack.beatpack_title }}</title>
+</head>
+<body>
+    <h1>{{ beatpack.beatpack_title }}</h1>
+    <p>Author: {{ beatpack.music_author }}</p>
+    <p>No. of BeatMaps: {{ beatpack.no_of_beatmaps }}</p>
+    <p>No. of Downloads: {{ beatpack.no_of_downloads }}</p>
+    <img src="{{ beatpack.beatpack_picture.url }}" alt="{{ beatpack.beatpack_title }} image" class="beatpack-image">
+
+    <h2>Beatmaps</h2>
+    <ul>
+        {% for beatmap in beatmaps %}
+        <li>
+            <h3>{{ beatmap.beatmap_title }}</h3>
+            <p>Difficulty: {{ beatmap.difficulty }}</p>
+            <p>Mapmaker: {{ beatmap.mapmaker.username }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'homepage' name=user.username %}">Back to Homepage</a>
+</body>
+</html>

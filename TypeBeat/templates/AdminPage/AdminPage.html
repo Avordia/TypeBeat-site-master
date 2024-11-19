@@ -315,8 +315,81 @@
                 {% endfor %}
             </tbody>
         </table>
-
+        
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Inline edit
+            document.querySelectorAll('.editable').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const originalText = cell.innerText;
+                    const input = document.createElement("input");
+                    input.value = originalText;
+                    cell.innerHTML = "";
+                    cell.appendChild(input);
+                    input.focus();
+
+                    input.addEventListener("blur", function() {
+                        cell.innerHTML = originalText;
+                    });
+
+                    input.addEventListener("keydown", function(event) {
+                        if (event.key === "Enter") {
+                            const model = cell.getAttribute("data-model");
+                            const objId = cell.getAttribute("data-id");
+                            const field = cell.getAttribute("data-field");
+                            const newValue = input.value;
+
+                            fetch(`/update/${model}/${objId}/`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded",
+                                    "X-CSRFToken": "{{ csrf_token }}"
+                                },
+                                body: `field_name=${field}&value=${newValue}`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === "success") {
+                                    cell.innerText = data.value;
+                                } else {
+                                    cell.innerText = originalText;
+                                    alert("Error updating data.");
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+
+            // Delete functionality
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const model = button.getAttribute("data-model");
+                    const objId = button.getAttribute("data-id");
+
+                    if (confirm("Are you sure you want to delete this item?")) {
+                        fetch(`/delete/${model}/${objId}/`, {
+                            method: "POST",
+                            headers: {
+                                "X-CSRFToken": "{{ csrf_token }}"
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                button.closest("tr").remove();
+                            } else {
+                                alert("Error deleting data.");
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
+
 </html>

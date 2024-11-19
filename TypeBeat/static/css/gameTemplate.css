@@ -69,7 +69,7 @@ header {
     border-radius: 5px;
 }
 
-.features, .beatmaps, .ranking {
+.features, .BeatPacks, .ranking {
     padding: 20px;
     margin: 20px;
 }

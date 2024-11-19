@@ -22,7 +22,7 @@
                 <li><a href="{% url 'BeatPack_Upload' name=user.username %}" class="navLinks">Upload BeatPack</a></li>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
                 <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
+                <li><a href="{% url 'logout' %}" class="navLinks">Logout</a></li>
             </ul>
         </div>
     </header>
@@ -54,15 +54,18 @@
             </div>
         </section>
 
-        <section class="beatmaps">
-            <h2>Popular Beatmaps</h2>
-            <div class="beatmap-list">
-                {% for beatmap in beatmaps %}
+        <section class="BeatPacks">
+            <h2>Popular BeatPacks</h2>
+            <div class="beatPack-list">
+                {% for beatpacks in beatpacks %}
                 <div class="beatmap-card">
-                    <h3>{{ beatmap.beatmap_title }}</h3>
-                    <p>Difficulty: {{ beatmap.difficulty }}</p>
-                    <p>Mapmaker: {{ beatmap.mapmaker.username }}</p>
-                    <a href="{% url 'beatmap_detail' beatmap_id=beatmap.beatmap_id %}" class="beatmap-button">Play Now</a>
+                    
+                    <h3>{{ beatpacks.beatpack_title }}</h3>
+                    <p>Author: {{ beatpacks.music_author }}</p>
+                    <p>No. of BeatMaps: {{ beatpacks.no_of_beatmaps }}</p>
+                    <p>No. of Downloads: {{ beatpacks.no_of_downloads }}</p>
+                    <img src="{{ beatpacks.beatpack_picture.url }}" alt="{{ beatpacks.beatpack_title }} image" class="beatpack-image">
+                    <a href="{% url 'beatpack_detail' beatpack_id=beatpacks.beatpack_id %}" class="beatmap-button">See More</a>
                 </div>
                 {% endfor %}
             </div>

@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from TypeBeat import views
+from TypeBeat.views import delete_item
 
 urlpatterns = [
     path('', views.login_view, name='login'), 
@@ -14,6 +15,6 @@ urlpatterns = [
 
 
     path('update/<str:model_name>/<int:obj_id>/', views.update_field, name='update_field'),
-    path('delete/<str:model_name>/<int:obj_id>/', views.delete_item, name='delete_item'),
-    path('beatmap/<int:beatmap_id>/', views.beatmap_detail, name='beatmap_detail'),
+    path('delete/<str:model_name>/<int:obj_id>/', delete_item, name='delete_item'),
+    path('beatpack/<int:beatpack_id>/', views.beatpack_detail, name='beatpack_detail'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
