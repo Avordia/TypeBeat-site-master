@@ -19,6 +19,7 @@
             <h3>{{ beatmap.beatmap_title }}</h3>
             <p>Difficulty: {{ beatmap.difficulty }}</p>
             <p>Mapmaker: {{ beatmap.mapmaker.username }}</p>
+            <a href="{% url 'beatmap_leaderboard' beatmap_id=beatmap.beatmap_id %}" class="leaderboard-button">View Leaderboard</a>
         </li>
         {% endfor %}
     </ul>

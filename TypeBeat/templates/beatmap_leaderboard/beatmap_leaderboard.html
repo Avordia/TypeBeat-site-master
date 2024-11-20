@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard for {{ beatmap.beatmap_title }}</title>
+</head>
+<body>
+    <h1>Leaderboard for {{ beatmap.beatmap_title }}</h1>
+    <ul>
+        {% for highscore in highscores %}
+        <li>
+            <p>User: {{ highscore.user.username }}</p>
+            <p>Score: {{ highscore.total_score }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'beatpack_detail' beatpack_id=beatmap.beatpack_id %}">Back to Beatpack</a>
+</body>
+</html>

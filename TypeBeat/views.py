@@ -45,6 +45,11 @@ def beatpack_detail(request, beatpack_id):
     beatmaps = Beatmap.objects.filter(beatpack_id=beatpack_id)
     return render(request, 'beatpack_detail/beatpack_detail.html', {'beatpack': beatpack, 'beatmaps': beatmaps})
 
+def beatmap_leaderboard(request, beatmap_id):
+    beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
+    highscores = Highscore.objects.filter(beatmap_id=beatmap_id).order_by('-total_score')
+    return render(request, 'beatmap_leaderboard/beatmap_leaderboard.html', {'beatmap': beatmap, 'highscores': highscores})
+
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
