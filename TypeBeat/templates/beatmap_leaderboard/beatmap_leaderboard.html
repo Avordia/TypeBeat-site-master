@@ -1,20 +1,61 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaderboard for {{ beatmap.beatmap_title }}</title>
+    <title>Beatmap/{title}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/hero.css' %}">
+    <style>
+        body {
+            background-image: url("{% static 'images/BackgroundB.png' %}");
+            background-position: center;
+            background-repeat: repeat;
+            background-size: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Leaderboard for {{ beatmap.beatmap_title }}</h1>
-    <ul>
-        {% for highscore in highscores %}
-        <li>
-            <p>User: {{ highscore.user.username }}</p>
-            <p>Score: {{ highscore.total_score }}</p>
-        </li>
-        {% endfor %}
-    </ul>
-    <a href="{% url 'beatpack_detail' beatpack_id=beatmap.beatpack_id %}">Back to Beatpack</a>
+    <header>
+        <div class="navbar">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
+            <div class ="navLinkContainer">
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
+                <a href="{% url 'BeatPack_Upload' name=user.username %}"><div class="navLinks">My Creations</div></a>
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Beatmaps</div></a>
+                <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="beatpack-hero" style="background-image: url('{{ beatpack.beatpack_picture.url }}');">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <!-- Centered Title and Author -->
+                <h1 class="beatpack-hero-title">{{ beatmap.beatmap_title }}</h1>
+                <p class="beatpack-hero-author">Beatmap by: {{ beatmap.mapmaker.username }}</p>
+            </div>
+            <!-- Info Section at the bottom -->
+            <div class="beatpack-hero-info-container">
+                <p class="beatpack-hero-info">No. of BeatMaps: {{ beatpack.no_of_beatmaps }}</p>
+                <p class="beatpack-hero-info">No. of Downloads: {{ beatpack.no_of_downloads }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <section class="leaderboard-section">
+        <h1>Leaderboard</h1>
+        <ul>
+            {% for highscore in highscores %}
+            <li>
+                <p>User: {{ highscore.user.username }}</p>
+                <p>Score: {{ highscore.total_score }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% comment %} <a href="{% url 'beatpack_detail' beatpack_id=beatmap.beatpack_id %}">Back to Beatpack</a> {% endcomment %}
 </body>
 </html>

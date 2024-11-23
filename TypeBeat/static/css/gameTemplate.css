@@ -1,9 +1,15 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #1a1a1a; /* Dark background */
+    background-image: url("{% static 'images/BackgroundB.png' %}");
+    background-size: cover; /* Adjust size */
+    background-position: center; /* Center the image */
     color: #f0f0f0; /* Light text */
     margin: 0;
     padding: 0;
+}
+
+body a{
+    text-decoration: none;
 }
 
 header {
@@ -11,65 +17,305 @@ header {
     padding: 10px 20px;
 }
 
+
+
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.navbar a{
+    text-decoration: none;
+}
+
+.navLinkContainer{
+    display: flex;
+    padding-right: 20px;
+}
+
+
+
+.navLinks {
+    color: #ffffff; /* Orange links */
+    text-decoration: none;
+    margin: 0 15px;
+    padding:10px;
+}
+
+.navLinks:hover {
+    transform: scale(1.2);
+    text-shadow: 
+        0 0 5px #ff6600,   /* Inner glow */
+        0 0 10px #ff6600,  /* Middle glow */
+        0 0 20px #ff6600,  /* Outer glow */
+        0 0 40px #ff9900,  /* Stronger glow */
+        0 0 80px #ffcc00;  /* Extended glow */
+}
+
+.logout{
+    border-radius:10px;
+    padding: 5px;
+    background-color: #ff6600;
+    color: #ffffff; /* Orange links */
+    text-decoration: none;
+    margin: 0 15px;
+    padding:10px;
+}
+
+.logout:hover {
+    transform: scale(1.2);
 }
 
 .navLogo {
     height: 50px;
 }
 
-.navbar ul {
-    list-style-type: none; /* Remove bullet points */
-    padding: 0; /* Remove default padding */
-    margin: 0; /* Remove default margin */
-    display: flex; /* Display list items in a row */
-}
-
-.navbar li {
-    margin: 0 15px; /* Space between the links */
-}
-
-.navLinks {
-    color: #ffffff; /* Orange links */
-    text-decoration: none;
-    margin: 0 15px;
-}
-
-.navLinks:hover {
-    text-decoration: underline;
-}
 
 .hero{
+    display:flex;
     text-align: center;
     padding: 50px 20px;
     align-content: center;
-    display: flex;
     justify-content: center;
     align-items: center;
     height: 400px;
     background-size: cover;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    font-weight: bold;
 }
+
 .hero-overlay {
     background: url('{{ background_image_url }}') center center;
 }
 
 .hero-content {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center elements horizontally */
+    justify-content: center; /* Center elements vertically */
     color: #000000;
+}
+.hero-content.beatpack-image{
+    align-content: center;
 }
 
 
 .cta-button {
     background-color: #ff6600; /* Orange button */
+    margin-top: 20px;
     color: #fff;
-    padding: 10px 20px;
+    padding: 14px 24px;
     text-decoration: none;
     border-radius: 5px;
+    letter-spacing: 1.5px;
+    text-align: center;
+    display: inline-block; /* Ensure proper button behavior */
+}
+.cta-button:hover{
+    transform: scale(1.05);
 }
 
 .features, .BeatPacks, .ranking {
     padding: 20px;
     margin: 20px;
 }
+
+.features {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.feature {
+    background-color: #0e0e0e; /* Black background for cards */
+    color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out;
+    margin: 30px;
+}
+
+.feature h3 {
+    font-weight: bold;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: #ffffff; /* Ensuring contrast */
+    font-weight: 700;
+    letter-spacing: 4.5px;
+}
+
+.features-heading {
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 4.5rem;
+    margin-bottom: 20px;
+    color: #ffffff; /* Ensuring contrast */
+    font-weight: 700;
+    letter-spacing: 4.5px;
+}
+
+.feature-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* Adjust layout for smaller screens */
+}
+
+
+.feature p {
+    font-size: 1rem;
+    color: #d3d3d3; 
+}
+
+.feature:hover {
+    transform: scale(1.05); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+
+.BeatPacks {
+    margin-right: 100px;
+    margin-left: 100px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #000000;
+    border-radius: 15px;
+}
+
+.BeatPacks h2 {
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 4.5rem;
+    margin-bottom: 20px;
+    color: #ffffff; /* Ensuring contrast */
+    font-weight: 700;
+    letter-spacing: 4.5px;
+}
+
+/* BeatPack List Container */
+.beatPack-list {
+    padding:50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 20px;
+}
+
+/* BeatPack Card Layout */
+.beatpack-card {
+    transition: transform 0.3s ease-in-out;
+    width: 340px; /* Matches the Figma card width */
+    height: 120px; /* Adjust height for better proportions */
+    border-radius: 15px;
+    display: flex;
+    text-decoration: none;
+    align-items: center; /* Vertically align image and details */
+    padding: 10px;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    gap: 10px; /* Reduce space between image and details */
+}
+
+.beatpack-card:hover{
+    transform: scale(1.05); 
+}
+
+/* Image (Leftmost) */
+.beatpack-image-container {
+    flex-shrink: 0; /* Ensure image doesn't shrink */
+    width: 80px; /* Adjust image width */
+    height: 80px; /* Adjust image height */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.beatpack-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Maintain aspect ratio */
+}
+
+.beatpack-details {
+    flex-grow: 1; /* Allow details to take remaining space */
+    text-align: left; /* Align text to the left */
+    padding: 0; /* Remove unnecessary padding */
+    margin: 0; /* Remove unnecessary margin */
+}
+
+.beatpack-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 5px 0; /* Add bottom margin for spacing */
+    color: white;
+}
+
+.beatpack-info {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 2px 0; /* Reduce spacing between lines */
+    color: #ffffff; /* Softer secondary text */
+}
+
+.beatpack-author {
+    font-size: 0.8rem;
+    font-style: italic;
+    font-weight: 400;
+    color: #b0b0b0;
+}
+
+/* Play Button (Rightmost, Vertically Centered) */
+.beatpack-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.beatpack-button:hover {
+    background-color: #f1c40f;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.play-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Color Classes */
+.beatpack-card.orange {
+    background-color: #FF8C00; /* Brighter orange */
+}
+
+.beatpack-card.red {
+    background-color: #E74C3C;
+}
+
+.beatpack-card.pink {
+    background-color: #FF69B4;
+}
+
+.beatpack-card.blue {
+    background-color: #3498DB;
+}
+
+.beatmap-section{
+    align-items: center;
+    margin-right: 100px;
+    margin-left: 100px;
+    text-align: 100px;
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 15px;
+}
+
+

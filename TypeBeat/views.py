@@ -6,6 +6,9 @@ from .forms import SignupForm, LoginForm,UploadForm
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
+import random
+
+color_classes = ['orange', 'red', 'pink', 'blue']
 
 def home(request):
     return HttpResponse("Hello, Django!")
@@ -13,6 +16,10 @@ def home(request):
 def homepage(request, name):
     beatpacks = Beatpack.objects.all()  # Query all beatpacks
     top_highscores = Highscore.objects.order_by('-total_score')[:10]  # Query top 10 users by highscore
+
+    # Assign a random color class to each beatpack
+    for beatpack in beatpacks:
+        beatpack.color_class = random.choice(color_classes)
 
     return render(
         request,
@@ -24,6 +31,7 @@ def homepage(request, name):
             'top_highscores': top_highscores,
         }
     )
+
 
 def BeatPack_Upload(request, name):
     if request.method == 'POST':
