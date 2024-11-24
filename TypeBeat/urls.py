@@ -13,6 +13,10 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('BeatPack_Upload/<str:name>/', views.BeatPack_Upload, name='BeatPack_Upload'),
     path('beatmap_leaderboard/<int:beatmap_id>/', views.beatmap_leaderboard, name='beatmap_leaderboard'),
+    path('user/', views.user_page, name='user_page'),
+    path('user/edit/<int:user_id>/', views.edit_user, name='edit_user'),
+    path('user/delete/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('play/<int:beatmap_id>/', views.play, name='play'),
 
 
     path('update/<str:model_name>/<int:obj_id>/', views.update_field, name='update_field'),

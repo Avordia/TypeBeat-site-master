@@ -1,12 +1,14 @@
-from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpResponse
-from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
-from .forms import SignupForm, LoginForm,UploadForm
-from django.contrib import messages
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 import random
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, render, redirect
+from .forms import SignupForm, LoginForm, UploadForm, UserForm, BeatPackForm, BeatmapForm, HighscoreForm
+from .models import User, Beatpack, Beatmap, Highscore
 
 color_classes = ['orange', 'red', 'pink', 'blue']
 
@@ -56,7 +58,51 @@ def beatpack_detail(request, beatpack_id):
 def beatmap_leaderboard(request, beatmap_id):
     beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
     highscores = Highscore.objects.filter(beatmap_id=beatmap_id).order_by('-total_score')
-    return render(request, 'beatmap_leaderboard/beatmap_leaderboard.html', {'beatmap': beatmap, 'highscores': highscores})
+    context = {
+        'beatmap': beatmap,
+        'beatpack': beatmap.beatpack,
+        'mapmaker': beatmap.mapmaker,
+        'user': request.user,
+        'highscores': highscores,
+    }
+    return render(request, 'beatmap_leaderboard/beatmap_leaderboard.html', context)
+
+def play(request, beatmap_id):
+    if request.method == 'POST':
+        user = request.user
+        beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
+        beatpack = beatmap.beatpack
+        mapmaker = beatmap.mapmaker
+
+        highscore = Highscore.objects.filter(user=user, beatmap=beatmap).first()
+        if highscore:
+            old_total_score = highscore.total_score
+            print(f"Old highscore data: {highscore.__dict__}")
+            highscore_form = HighscoreForm(request.POST, instance=highscore)
+        else:
+            old_total_score = None
+            highscore_form = HighscoreForm(request.POST)
+
+        if highscore_form.is_valid():
+            new_highscore = highscore_form.save(commit=False)
+            print(f"New highscore data: {new_highscore.__dict__}")
+            print(f"New highscore total score: {new_highscore.total_score}")
+            print(f"Old highscore total score: {old_total_score}")
+
+            if old_total_score is None or new_highscore.total_score > old_total_score:
+                new_highscore.user = user
+                new_highscore.beatmap = beatmap
+                new_highscore.beatpack = beatpack
+                new_highscore.mapmaker = mapmaker
+                try:
+                    new_highscore.save()
+                    messages.success(request, 'High score submitted successfully!')
+                except IntegrityError:
+                    highscore_form.add_error(None, 'A highscore for this user and beatmap already exists.')
+            else:
+                messages.error(request, 'New score is lower than or equal to the current high score.')
+
+    return redirect('beatmap_leaderboard', beatmap_id=beatmap_id)
 
 def signup(request):
     if request.method == 'POST':
@@ -99,10 +145,40 @@ def login_view(request):
         form = LoginForm()
     return render(request, 'Login/Login.html', {'form': form})
 
-from django.shortcuts import render, redirect
-from django.db import IntegrityError
-from .forms import UserForm, BeatPackForm, BeatmapForm, HighscoreForm
-from .models import User, Beatpack, Beatmap, Highscore
+@login_required
+def user_page(request):
+    return render(request, 'user_page/user_page.html', {'user': request.user})
+
+
+@login_required
+def edit_user(request, user_id):
+    user = get_object_or_404(User, user_id=user_id)
+    if request.method == 'POST':
+        user.username = request.POST.get('username')
+        user.email = request.POST.get('email')
+
+        profile_picture = request.FILES.get('profile_picture')
+        if profile_picture:
+            user.profile_picture = profile_picture
+
+        password = request.POST.get('password')
+        if password:
+            user.set_password(password)
+
+        user.save()
+        messages.success(request, 'User details updated successfully.')
+        return redirect('login')
+    return render(request, 'edit_user/edit_user.html', {'user': user})
+
+@login_required
+def delete_user(request, user_id):
+    user = get_object_or_404(User, user_id=user_id)
+    if request.method == 'POST':
+        user.delete()
+        messages.success(request, 'User deleted successfully.')
+        return redirect('login')
+    return render(request, 'delete_user/delete_user.html', {'user': user})
+
 @staff_member_required
 def AdminPage(request):
     # Initialize forms

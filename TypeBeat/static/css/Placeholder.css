@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a; /* Dark background */
+    color: #f0f0f0; /* Light text */
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #0e0e0e;
+    padding: 10px 20px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navLogo {
+    height: 50px;
+}
+
+.navbar ul {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
+    display: flex; /* Display list items in a row */
+}
+
+.navbar li {
+    margin: 0 15px; /* Space between the links */
+}
+
+.navLinks {
+    color: #ffffff; /* Orange links */
+    text-decoration: none;
+    margin: 0 15px;
+}
+
+.navLinks:hover {
+    text-decoration: underline;
+}
+
+.hero{
+    text-align: center;
+    padding: 50px 20px;
+    align-content: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    background-size: cover;
+}
+.hero-overlay {
+    background: url('{{ background_image_url }}') center center;
+}
+
+.hero-content {
+    color: #000000;
+}
+
+
+.cta-button {
+    background-color: #ff6600; /* Orange button */
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.features, .beatmaps, .ranking {
+    padding: 20px;
+    margin: 20px;
+}
