@@ -240,7 +240,7 @@
                         No Image
                         {% endif %}
                     </td>
-                    <td><span class="delete-btn">Delete</span></td>
+                    <td><span class="delete-btn" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}">Delete</span></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -258,7 +258,7 @@
                     <th>No. of Letters</th>
                     <th>No. of Spaces</th>
                     <th>Mapmaker</th>
-                    <th>Actions</th>
+                    <th>BeatPackID</th>
                 </tr>
             </thead>
             <tbody>
@@ -271,7 +271,8 @@
                     <td>{{ beatmap.no_of_letters }}</td>
                     <td>{{ beatmap.no_of_spaces }}</td>
                     <td>{{ beatmap.mapmaker.username }}</td>
-                    <td><span class="delete-btn">Delete</span></td>
+                    <td>{{ beatmap.beatpack.beatpack_id }}</td>
+                    <td><span class="delete-btn" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}">Delete</span></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -310,7 +311,7 @@
                     <td>{{ highscore.great }}</td>
                     <td>{{ highscore.good }}</td>
                     <td>{{ highscore.miss }}</td>
-                    <td><span class="delete-btn">Delete</span></td>
+                    <td><span class="delete-btn" data-model="highscore" data-id="{{ highscore.id }}">Delete</span></td>
                 </tr>
                 {% endfor %}
             </tbody>

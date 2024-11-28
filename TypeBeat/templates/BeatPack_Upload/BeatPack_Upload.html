@@ -20,7 +20,7 @@
     <header>
         <div class="navbar">
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
-            <div class="navLinkContainer">
+            <div class ="navLinkContainer">
                 <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
                 <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
                 <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Beatmaps</div></a>
@@ -28,6 +28,7 @@
             </div>
         </div>
     </header>
+
 
     <main>
         <!-- Beatpack Upload Section -->
@@ -44,6 +45,7 @@
             <h2>Your Beatpacks</h2>
             <ul>
                 {% for beatpack in user_beatpacks %}
+                    <a href="{% url 'my_beatmap' name=beatpack.music_author title=beatpack.beatpack_title %}">
                     <li>
                         <img src="{{ beatpack.beatpack_picture.url }}" alt="{{ beatpack.beatpack_title }}" style="max-width: 300px; max-height: 300px;">
                         <strong>Title:</strong> {{ beatpack.beatpack_title }}<br>
@@ -51,6 +53,7 @@
                         <strong>Number of Beatmaps:</strong> {{ beatpack.no_of_beatmaps }}<br>
                         <strong>Number of Downloads:</strong> {{ beatpack.no_of_downloads }}<br>
                     </li>
+                    </a>
                 {% empty %}
                     <li>You have not created any beatpacks yet.</li>
                 {% endfor %}

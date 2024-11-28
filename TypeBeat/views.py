@@ -124,7 +124,22 @@ def upload_beatpack(request, name):
         "user_beatpacks": user_beatpacks,
     })
 
+def my_beatmap(request, name, title):
+    beatpack = get_object_or_404(Beatpack, beatpack_title=title)
+    beatmaps = Beatmap.objects.filter(beatpack=beatpack)
 
+    if request.method == 'POST':
+        beatmap_id = request.POST.get('beatmap_id')
+        beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
+        if 'delete' in request.POST:
+            beatmap.delete()
+        else:
+            beatmap.beatmap_title = request.POST.get('beatmap_title')
+            beatmap.no_of_letters = request.POST.get('no_of_letters')
+            beatmap.no_of_spaces = request.POST.get('no_of_spaces')
+            beatmap.save()
+
+    return render(request, 'beatpack_beatmaps/beatpack_beatmaps.html', {'beatpack': beatpack, 'beatmaps': beatmaps})
 
 
 def logout_view(request):
