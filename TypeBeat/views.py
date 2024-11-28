@@ -137,6 +137,7 @@ def my_beatmap(request, name, title):
             beatmap.beatmap_title = request.POST.get('beatmap_title')
             beatmap.no_of_letters = request.POST.get('no_of_letters')
             beatmap.no_of_spaces = request.POST.get('no_of_spaces')
+            beatmap.difficulty = request.POST.get('difficulty')
             beatmap.save()
 
     return render(request, 'beatpack_beatmaps/beatpack_beatmaps.html', {'beatpack': beatpack, 'beatmaps': beatmaps})

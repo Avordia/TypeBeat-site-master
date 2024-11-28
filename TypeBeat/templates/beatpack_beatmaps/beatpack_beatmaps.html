@@ -18,7 +18,7 @@
                     <th>Title</th>
                     <th>No. of Letters</th>
                     <th>No. of Spaces</th>
-                    <th>Actions</th>
+                    <th>Difficulty</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +28,7 @@
                         {% csrf_token %}
                         <input type="hidden" name="beatmap_id" value="{{ beatmap.beatmap_id }}">
                         <td><input type="text" name="beatmap_title" value="{{ beatmap.beatmap_title }}"></td>
+                        <td><input type="number" name="difficulty" value="{{ beatmap.difficulty }}"></td>
                         <td><input type="number" name="no_of_letters" value="{{ beatmap.no_of_letters }}"></td>
                         <td><input type="number" name="no_of_spaces" value="{{ beatmap.no_of_spaces }}"></td>
                         <td>
