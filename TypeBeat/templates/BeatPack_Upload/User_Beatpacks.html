@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Beatpacks</title>
+</head>
+<body>
+    <header>
+        <h1>Your Beatpacks</h1>
+    </header>
+
+    <main>
+        {% if beatpacks %}
+            <ul>
+                {% for beatpack in beatpacks %}
+                    <li>
+                        <strong>{{ beatpack.beatpack_title }}</strong> by {{ beatpack.music_author }}<br>
+                        Number of Beatmaps: {{ beatpack.beatmap_set.count }}<br>
+                        <a href="{% url 'manage_beatmaps' beatpack.id %}">Manage Beatmaps</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven't created any Beatpacks yet. <a href="{% url 'upload_beatpack' %}">Upload one now!</a></p>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Rhythm Game. All rights reserved.</p>
+    </footer>
+</body>
+</html>

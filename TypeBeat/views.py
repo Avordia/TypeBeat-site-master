@@ -7,8 +7,14 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms import SignupForm, LoginForm, UploadForm, UserForm, BeatPackForm, BeatmapForm, HighscoreForm
+from .forms import SignupForm, LoginForm, BeatpackUploadForm, UserForm, BeatPackForm, BeatmapForm, HighscoreForm
 from .models import User, Beatpack, Beatmap, Highscore
+from django.db.models import Q
+from .utils import parse_beatpack_details
+from django.shortcuts import render
+from django.core.files.base import ContentFile
+from django.db import transaction
+
 
 color_classes = ['orange', 'red', 'pink', 'blue']
 
@@ -34,17 +40,92 @@ def homepage(request, name):
         }
     )
 
+def upload_beatpack(request, name):
+    user = request.user
+    print(f"Current user: {user}")  # Debug message
 
-def BeatPack_Upload(request, name):
-    if request.method == 'POST':
-        form = UploadForm(request.POST, request.FILES)
+    user_beatpacks = Beatpack.objects.filter(beatmap__mapmaker=user).distinct()
+    print(f"User's existing Beatpacks: {list(user_beatpacks)}")  # Debug message
+
+    if request.method == "POST":
+        form = BeatpackUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('homepage', name=request.user.username)
-    else:
-        form = UploadForm()
+            details_file = form.cleaned_data["details_file"]
+            beatpack_image = form.cleaned_data["beatpack_image"]
+            print(f"Received details file: {details_file.name}")  # Debug message
+            print(f"Received image file: {beatpack_image.name}")  # Debug message
 
-    return render(request, 'BeatPack_Upload/BeatPack_Upload.html', {'UploadForm': form})
+            try:
+                # Parse the .txt file using util function
+                beatpack_data, beatmaps_data = parse_beatpack_details(details_file)
+                print(f"Parsed Beatpack data: {beatpack_data}")  # Debug message
+                print(f"Parsed Beatmaps data: {beatmaps_data}")  # Debug message
+
+                # Begin a transaction to handle Beatpack and Beatmap creation
+                with transaction.atomic():
+                    # Create and save the Beatpack
+                    beatpack = Beatpack(
+                        beatpack_title=beatpack_data["beatpack_title"],
+                        music_author=beatpack_data["music_author"],
+                        no_of_beatmaps=len(beatmaps_data),
+                        no_of_downloads=0,
+                    )
+                    beatpack.beatpack_picture.save(beatpack_image.name, ContentFile(beatpack_image.read()))
+                    beatpack.save()
+                    print(f"Created Beatpack with attributes: {beatpack.__dict__}")  # Debugging attributes
+
+                    # Create and save Beatmaps
+                    for beatmap_data in beatmaps_data:
+                        contributor_username = beatmap_data.get("contributor", None)
+                        if contributor_username:
+                            try:
+                                # Find contributor by username
+                                contributor = User.objects.get(username=contributor_username)
+                                mapmaker = contributor
+                            except User.DoesNotExist:
+                                print(f"Contributor '{contributor_username}' not found. Defaulting to uploader.")
+                                mapmaker = user  # Default to uploader if contributor not found
+                        else:
+                            mapmaker = user  # Default to uploader if no contributor
+
+                        beatmap = Beatmap.objects.create(
+                            mapmaker=mapmaker,
+                            beatpack=beatpack,
+                            beatmap_title=beatmap_data["beatmap_title"],
+                            difficulty=int(beatmap_data.get("difficulty", 0)),
+                            no_of_letters=int(beatmap_data.get("no_of_letters", 0)),
+                            no_of_spaces=int(beatmap_data.get("no of spaces", 0)),
+                            total_note_count=int(beatmap_data.get("no_of_letters", 0)) +
+                            int(beatmap_data.get("no of spaces", 0)),
+                        )
+                        print(f"Created Beatmap with attributes: {beatmap.__dict__}")  # Debugging attributes
+
+                # Print success message to the console
+                print(f"SUCCESS: Beatpack '{beatpack.beatpack_title}' uploaded by user '{user.username}' with ID {beatpack.beatpack_id}")
+
+                # Add a success message for the user
+                messages.success(request, f"Successfully uploaded Beatpack: {beatpack.beatpack_title}")
+                return redirect('BeatPack_Upload/BeatPack_Upload.html', name=name)
+
+            except Exception as e:
+                print(f"Error during Beatpack processing: {str(e)}")  # Debug message
+                messages.error(request, f"Error: {str(e)}")
+        else:
+            print(f"Form errors: {form.errors}")  # Debug message
+            messages.error(request, "Invalid file upload.")
+
+    else:
+        form = BeatpackUploadForm()
+        print("Rendering the upload form.")  # Debug message
+
+    return render(request, "BeatPack_Upload/BeatPack_Upload.html", {
+        "form": form,
+        "name": name,
+        "user_beatpacks": user_beatpacks,
+    })
+
+
+
 
 def logout_view(request):
     logout(request)

@@ -20,4 +20,4 @@ from django.urls import include, path
 urlpatterns = [
     path("", include("TypeBeat.urls")),
     path('admin/', admin.site.urls)
-]
+] 

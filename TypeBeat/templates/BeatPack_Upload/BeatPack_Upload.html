@@ -1,48 +1,61 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rhythm Game - Homepage</title>
-    <link rel="stylesheet" href="{% static 'css/Upload.css' %}">
-
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Beatpacks</title>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+        <style>
+            body {
+                background-image: url("{% static 'images/BackgroundB.png' %}");
+                background-position: center;
+                background-repeat: repeat;
+                background-size: auto;
+            }
+        </style>
+    </head>
 <body>
     <header>
         <div class="navbar">
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
-            <ul>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'logout' %}" class="navLinks">Logout</a></li>
-            </ul>
+            <div class="navLinkContainer">
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
+                <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Beatmaps</div></a>
+                <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
+            </div>
         </div>
     </header>
 
     <main>
+        <!-- Beatpack Upload Section -->
         <section class="upload-beatpack">
-            <h2>Upload Beatpack</h2>
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <label for="id_beatpack_title">Beatpack Title:</label>
-                <input type="text" id="id_beatpack_title" name="beatpack_title">
-        
-                <label for="id_music_author">Music Author:</label>
-                <input type="text" id="id_music_author" name="music_author">
-        
-                <label for="id_no_of_beatmaps">Number of Beatmaps:</label>
-                <input type="number" id="id_no_of_beatmaps" name="no_of_beatmaps">
-        
-                <label for="id_beatpack_picture">Beatpack Picture:</label>
-                <input type="file" id="id_beatpack_picture" name="beatpack_picture">
-        
-                <button type="submit">Upload Beatpack</button>
+                {{ form.as_p }}
+                <button type="submit">Upload</button>
             </form>
         </section>
 
+        <!-- User's Existing Beatpacks -->
+        <section class="user-beatpacks">
+            <h2>Your Beatpacks</h2>
+            <ul>
+                {% for beatpack in user_beatpacks %}
+                    <li>
+                        <img src="{{ beatpack.beatpack_picture.url }}" alt="{{ beatpack.beatpack_title }}" style="max-width: 300px; max-height: 300px;">
+                        <strong>Title:</strong> {{ beatpack.beatpack_title }}<br>
+                        <strong>Music Author:</strong> {{ beatpack.music_author }}<br>
+                        <strong>Number of Beatmaps:</strong> {{ beatpack.no_of_beatmaps }}<br>
+                        <strong>Number of Downloads:</strong> {{ beatpack.no_of_downloads }}<br>
+                    </li>
+                {% empty %}
+                    <li>You have not created any beatpacks yet.</li>
+                {% endfor %}
+            </ul>
+        </section>
     </main>
 
     <footer>

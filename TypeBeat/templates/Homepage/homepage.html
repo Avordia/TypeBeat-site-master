@@ -26,7 +26,7 @@
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
             <div class ="navLinkContainer">
                 <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
-                <a href="{% url 'BeatPack_Upload' name=user.username %}"><div class="navLinks">My Creations</div></a>
+                <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
                 <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Beatmaps</div></a>
                 <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
             </div>
