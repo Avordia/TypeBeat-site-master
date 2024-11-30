@@ -7,10 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from .forms import SignupForm, LoginForm, BeatpackUploadForm, UserForm, BeatPackForm, BeatmapForm, HighscoreForm
+from .forms import SignupForm, LoginForm, BeatpackUploadForm, UserForm, BeatPackForm, BeatmapForm, HighscoreForm, \
+    BeatmapUploadForm
 from .models import User, Beatpack, Beatmap, Highscore
 from django.db.models import Q
-from .utils import parse_beatpack_details
+from .utils import parse_beatpack_details, parse_single_beatmap
 from django.shortcuts import render
 from django.core.files.base import ContentFile
 from django.db import transaction
@@ -22,7 +23,7 @@ def home(request):
     return HttpResponse("Hello, Django!")
 
 def homepage(request, name):
-    beatpacks = Beatpack.objects.order_by('no_of_downloads')[:3]  
+    beatpacks = Beatpack.objects.order_by('no_of_downloads')[:3]
     # Assign a random color class to each beatpack
     for beatpack in beatpacks:
         beatpack.color_class = random.choice(color_classes)
@@ -117,7 +118,7 @@ def upload_beatpack(request, name):
 
                 # Add a success message for the user
                 messages.success(request, f"Successfully uploaded Beatpack: {beatpack.beatpack_title}")
-                return redirect('upload_beatpack', name=name)
+                return redirect('BeatPack_Upload/BeatPack_Upload.html', name=name)
 
             except Exception as e:
                 print(f"Error during Beatpack processing: {str(e)}")  # Debug message
@@ -136,21 +137,7 @@ def upload_beatpack(request, name):
         "user_beatpacks": user_beatpacks,
     })
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from django.db import transaction
-from .models import Beatmap, Beatpack
-from .forms import BeatmapUploadForm
-from .utils import parse_single_beatmap
-
-
 def my_beatmap(request, name, id, beatpack_title):
-    """
-    Handles the management of Beatmaps for a specific Beatpack, including:
-    - Listing Beatmaps
-    - Uploading a Beatmap file
-    - Editing or deleting existing Beatmaps
-    """
     beatpack = get_object_or_404(Beatpack, beatpack_id=id)
     beatmaps = Beatmap.objects.filter(beatpack=beatpack)
     difficulties = range(1, 6)  # Available difficulties (1 to 5)
@@ -161,7 +148,6 @@ def my_beatmap(request, name, id, beatpack_title):
             form = BeatmapUploadForm(request.POST, request.FILES)
             if form.is_valid():
                 details_file = form.cleaned_data["details_file"]
-
                 try:
                     # Parse the Beatmap file
                     beatmap_data = parse_single_beatmap(details_file)
@@ -193,6 +179,11 @@ def my_beatmap(request, name, id, beatpack_title):
 
             if "delete" in request.POST:
                 beatmap.delete()
+                beatpack.no_of_beatmaps -= 1
+                beatpack.save()
+                response = delete_empty_beatpack(beatpack.beatpack_id, request.user)
+                if response:
+                    return response
                 messages.success(request, "Beatmap deleted successfully.")
             else:
                 # Update Beatmap details
@@ -204,9 +195,6 @@ def my_beatmap(request, name, id, beatpack_title):
                 beatmap.save()
                 messages.success(request, "Beatmap updated successfully.")
 
-            return redirect("my_beatmap", name=name, id=id, beatpack_title=beatpack_title)
-
-    # Render the page with Beatmaps and the upload form
     form = BeatmapUploadForm()
     return render(request, "beatpack_beatmaps/beatpack_beatmaps.html", {
         "beatpack": beatpack,
@@ -215,6 +203,15 @@ def my_beatmap(request, name, id, beatpack_title):
         "form": form,
         "name": name,
     })
+
+def delete_empty_beatpack(beatpack_id, user):
+    beatpack = get_object_or_404(Beatpack, pk=beatpack_id)
+    beatmap_count = beatpack.no_of_beatmaps
+    if beatmap_count == 0:
+        beatpack.delete()
+        return redirect('upload_beatpack', user.username)
+    return None
+
 
 def logout_view(request):
     logout(request)
@@ -236,6 +233,26 @@ def beatmap_leaderboard(request, beatmap_id):
         'highscores': highscores,
     }
     return render(request, 'beatmap_leaderboard/beatmap_leaderboard.html', context)
+
+def download_beatpack(request, beatpack_id):
+    beatpack = get_object_or_404(Beatpack, beatpack_id=beatpack_id)
+    beatmaps = Beatmap.objects.filter(beatpack=beatpack)
+
+    # Increment the download count
+    beatpack.no_of_downloads += 1
+    beatpack.save()
+
+    # Create the content of the .txt file
+    content = f"[Beatpack]\nbeatpack_title: {beatpack.beatpack_title}\nmusic_author: {beatpack.music_author}\n\n"
+    for beatmap in beatmaps:
+        content += f"[Beatmap]\nbeatmap_title: {beatmap.beatmap_title}\ndifficulty: {beatmap.difficulty}\n"
+        content += f"no_of_letters: {beatmap.no_of_letters}\nno of spaces: {beatmap.no_of_spaces}\n"
+        content += "\n"
+
+    # Create the response
+    response = HttpResponse(content, content_type='text/plain')
+    response['Content-Disposition'] = f'attachment; filename="{beatpack.beatpack_title}.txt"'
+    return response
 
 def play(request, beatmap_id):
     if request.method == 'POST':
@@ -324,20 +341,31 @@ def user_page(request):
 def edit_user(request, user_id):
     user = get_object_or_404(User, user_id=user_id)
     if request.method == 'POST':
-        user.username = request.POST.get('username')
-        user.email = request.POST.get('email')
+        new_username = request.POST.get('username')
+        new_email = request.POST.get('email')
 
-        profile_picture = request.FILES.get('profile_picture')
-        if profile_picture:
-            user.profile_picture = profile_picture
+        # Check if the new username is unique
+        if User.objects.filter(username=new_username).exclude(user_id=user_id).exists():
+            messages.error(request, 'Username already exists. Please choose a different one.')
+        else:
+            user.username = new_username
+            user.email = new_email
 
-        password = request.POST.get('password')
-        if password:
-            user.set_password(password)
+            profile_picture = request.FILES.get('profile_picture')
+            if profile_picture:
+                user.profile_picture = profile_picture
 
-        user.save()
-        messages.success(request, 'User details updated successfully.')
-        return redirect('login')
+            password = request.POST.get('password')
+            if password:
+                user.set_password(password)
+
+            try:
+                user.save()
+                messages.success(request, 'User details updated successfully.')
+                return redirect('login')
+            except IntegrityError:
+                messages.error(request, 'An error occurred while updating the user details. Please try again.')
+
     return render(request, 'edit_user/edit_user.html', {'user': user})
 
 @login_required

@@ -41,6 +41,7 @@
             <div class="beatpack-hero-info-container">
                 <p class="beatpack-hero-info">No. of BeatMaps: {{ beatpack.no_of_beatmaps }}</p>
                 <p class="beatpack-hero-info">No. of Downloads: {{ beatpack.no_of_downloads }}</p>
+                <button onclick="location.href='{% url 'download_beatpack' beatpack.beatpack_id %}'">Download</button>
             </div>
         </div>
     </div>
