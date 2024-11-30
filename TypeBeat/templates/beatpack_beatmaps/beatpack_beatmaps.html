@@ -1,45 +1,128 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ beatpack.beatpack_title }} - Beatmaps</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Beatmaps</title>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+        <link rel="stylesheet" href="{% static 'css/hero.css' %}">
+        <link rel="stylesheet" href="{% static 'css/editList.css' %}">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <style>
+            body {
+                background-image: url("{% static 'images/BackgroundB.png' %}");
+                background-position: center;
+                background-repeat: repeat;
+                background-size: auto;
+            }
+            .edit-icon {
+                cursor: pointer;
+                color: #007bff;
+            }
+            .hidden {
+                display: none;
+            }
+        </style>
+    </head>
 <body>
     <header>
-        <h1>{{ beatpack.beatpack_title }} - Beatmaps</h1>
+        <div class="navbar">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
+            <div class="navLinkContainer">
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
+                <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
+                <a href="{% url 'beatpacks' %}"><div class="navLinks">Beatpacks</div></a>
+                <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
+            </div>
+        </div>
     </header>
+
+    <div class="beatpack-hero" style="background-image: url('{{ beatpack.beatpack_picture.url }}');">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h1 class="beatpack-hero-title">{{ beatpack.beatpack_title }}</h1>
+                <p class="beatpack-hero-author">Author: {{ beatpack.music_author }}</p>
+            </div>
+        </div>
+    </div>
     <main>
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>No. of Letters</th>
-                    <th>No. of Spaces</th>
-                    <th>Difficulty</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for beatmap in beatmaps %}
-                <tr>
+        <h1>Your Creations</h1>
+        <div class="beatmap-container">
+            <div class="beatmap-row beatmap-header">
+                <div class="beatmap-cell">Title</div>
+                <div class="beatmap-cell">No. of Letters</div>
+                <div class="beatmap-cell">No. of Spaces</div>
+                <div class="beatmap-cell">Difficulty</div>
+                <div class="beatmap-cell">Actions</div>
+            </div>
+
+            {% for beatmap in beatmaps %}
+            <div class="beatmap-row" data-row-id="{{ beatmap.beatmap_id }}">
+                <!-- View Mode -->
+                <div class="view-mode">
+                    <div class="beatmap-cell">{{ beatmap.beatmap_title }}</div>
+                    <div class="beatmap-cell">{{ beatmap.no_of_letters }}</div>
+                    <div class="beatmap-cell">{{ beatmap.no_of_spaces }}</div>
+                    <div class="beatmap-cell">{{ beatmap.difficulty }}</div>
+                    <div class="beatmap-cell actions">
+                        <span class="edit-icon material-icons">edit</span>
+                    </div>
+                </div>
+
+                <!-- Edit Mode -->
+                <div class="edit-mode hidden">
                     <form method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="beatmap_id" value="{{ beatmap.beatmap_id }}">
-                        <td><input type="text" name="beatmap_title" value="{{ beatmap.beatmap_title }}"></td>
-                        <td><input type="number" name="difficulty" value="{{ beatmap.difficulty }}"></td>
-                        <td><input type="number" name="no_of_letters" value="{{ beatmap.no_of_letters }}"></td>
-                        <td><input type="number" name="no_of_spaces" value="{{ beatmap.no_of_spaces }}"></td>
-                        <td>
+                        <div class="beatmap-cell">
+                            <input type="text" name="beatmap_title" value="{{ beatmap.beatmap_title }}">
+                        </div>
+                        <div class="beatmap-cell">
+                            <input type="number" name="no_of_letters" value="{{ beatmap.no_of_letters }}">
+                        </div>
+                        <div class="beatmap-cell">
+                            <input type="number" name="no_of_spaces" value="{{ beatmap.no_of_spaces }}">
+                        </div>
+                        <div class="beatmap-cell">
+                            <select name="difficulty">
+                                {% for i in difficulties %}
+                                <option value="{{ i }}" {% if beatmap.difficulty == i %}selected{% endif %}>
+                                    {{ i }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="beatmap-cell actions">
                             <button type="submit">Save</button>
                             <button type="submit" name="delete" value="delete">Delete</button>
-                        </td>
+                        </div>
                     </form>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </main>
+    <script>
+        $(document).ready(function () {
+            $('.edit-icon').on('click', function () {
+                const row = $(this).closest('.beatmap-row');
+                row.find('.view-mode').addClass('hidden');
+                row.find('.edit-mode').removeClass('hidden');
+            });
+        });
+    </script>
+
+    <div class="file-upload-container">
+        <h2>Upload Beatmap</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="details_file">Choose a .txt file:</label>
+            <input type="file" id="details_file" name="details_file" accept=".txt">
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+    
 </body>
 </html>

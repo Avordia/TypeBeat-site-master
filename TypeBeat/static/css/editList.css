@@ -1,0 +1,120 @@
+.beatmap-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.beatmap-row {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 10px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgba(0, 0, 0, 0.425);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+/* Header row styling */
+.beatmap-header {
+    font-weight: bold;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+}
+
+/* Individual cell styling */
+.beatmap-cell {
+    flex: 1; /* All cells are equally spaced */
+    padding: 5px 10px;
+    text-align: center;
+    color: #fff; /* Text color for better contrast */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Smaller size for action buttons */
+.actions {
+    flex: 0.5; /* Reduce width for action buttons */
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hover effect for rows */
+.beatmap-row:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Slight light overlay */
+}
+
+/* Button styling */
+button {
+    padding: 5px 10px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: opacity 0.3s ease, background-color 0.3s ease;
+}
+
+button:hover {
+    opacity: 0.8;
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Edit Icon Styling */
+.edit-icon {
+    font-size: 20px;
+    cursor: pointer;
+    color: #007bff;
+    transition: transform 0.2s ease, color 0.3s ease;
+}
+
+.edit-icon:hover {
+    transform: scale(1.1);
+    color: #0056b3; /* Darker shade on hover */
+}
+
+/* Hidden mode for edit-view toggling */
+.hidden {
+    display: none !important;
+}
+
+/* Styling for form inputs in edit mode */
+input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #000;
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Responsiveness for smaller screens */
+@media (max-width: 768px) {
+    .beatmap-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .actions {
+        justify-content: flex-start;
+    }
+
+    .beatmap-cell {
+        text-align: left;
+    }
+}

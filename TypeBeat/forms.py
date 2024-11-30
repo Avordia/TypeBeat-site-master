@@ -84,6 +84,14 @@ class BeatpackUploadForm(forms.Form):
         if not file.name.endswith('.txt'):
             raise forms.ValidationError("Only .txt files are allowed for the details file.")
         return file
+    
+class BeatmapUploadForm(forms.Form):
+    details_file = forms.FileField(required=True, label="Beatmap File")
+    def clean_details_file(self):
+        file = self.cleaned_data['details_file']
+        if not file.name.endswith('.txt'):
+            raise forms.ValidationError("Only .txt files are allowed for the details file.")
+        return file
 
 class HighscoreForm(forms.ModelForm):
     class Meta:

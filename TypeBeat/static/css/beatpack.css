@@ -1,0 +1,131 @@
+.BeatPacks {
+    margin-right: 100px;
+    margin-left: 100px;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    background-color: #000000;
+    border-radius: 15px;
+}
+
+.BeatPacks h2 {
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 4.5rem;
+    margin-bottom: 20px;
+    color: #ffffff; /* Ensuring contrast */
+    font-weight: 700;
+    letter-spacing: 4.5px;
+}
+
+/* BeatPack List Container */
+.beatPack-list {
+    padding:50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    gap: 20px;
+}
+
+/* BeatPack Card Layout */
+.beatpack-card {
+    transition: transform 0.3s ease-in-out;
+    width: 340px; /* Matches the Figma card width */
+    height: 120px; /* Adjust height for better proportions */
+    border-radius: 15px;
+    display: flex;
+    text-decoration: none;
+    align-items: center; /* Vertically align image and details */
+    padding: 10px;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    gap: 10px; /* Reduce space between image and details */
+}
+
+.beatpack-card:hover{
+    transform: scale(1.05); 
+}
+
+/* Image (Leftmost) */
+.beatpack-image-container {
+    flex-shrink: 0; /* Ensure image doesn't shrink */
+    width: 80px; /* Adjust image width */
+    height: 80px; /* Adjust image height */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.beatpack-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Maintain aspect ratio */
+}
+
+.beatpack-details {
+    flex-grow: 1; /* Allow details to take remaining space */
+    text-align: left; /* Align text to the left */
+    padding: 0; /* Remove unnecessary padding */
+    margin: 0; /* Remove unnecessary margin */
+}
+
+.beatpack-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0 0 5px 0; /* Add bottom margin for spacing */
+    color: white;
+}
+
+.beatpack-info {
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin: 2px 0; /* Reduce spacing between lines */
+    color: #ffffff; /* Softer secondary text */
+}
+
+.beatpack-author {
+    font-size: 0.8rem;
+    font-style: italic;
+    font-weight: 400;
+    color: #b0b0b0;
+}
+
+/* Play Button (Rightmost, Vertically Centered) */
+.beatpack-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%); /* Center vertically */
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.beatpack-button:hover {
+    background-color: #f1c40f;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.play-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Color Classes */
+.beatpack-card.orange {
+    background-color: #FF6E00; /* Brighter orange */
+}
+
+.beatpack-card.red {
+    background-color: #ED2E2E;
+}
+
+.beatpack-card.pink {
+    background-color: #FE08FD;
+}
+
+.beatpack-card.blue {
+    background-color: #6146E3;
+}

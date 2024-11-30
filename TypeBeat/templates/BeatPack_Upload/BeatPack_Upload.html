@@ -7,6 +7,7 @@
         <title>My Beatpacks</title>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+        <link rel="stylesheet" href="{% static 'css/myCreations.css' %}">
         <style>
             body {
                 background-image: url("{% static 'images/BackgroundB.png' %}");
@@ -23,41 +24,41 @@
             <div class ="navLinkContainer">
                 <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
                 <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
-                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Beatmaps</div></a>
-                <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
+                <a href="{% url 'beatpacks' %}"><div class="navLinks">Beatpacks</div></a>
+                <a href="{% url 'logout' %}"><div class="logout">Nigger</div></a>
             </div>
         </div>
     </header>
 
-
     <main>
+        
         <!-- Beatpack Upload Section -->
         <section class="upload-beatpack">
-            <form method="POST" enctype="multipart/form-data">
+            <h1>UPLOAD BEATPACKS HERE</h1>
+            <form class="form" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit">Upload</button>
+                <button class="cta-button" type="submit">Upload</button>
             </form>
         </section>
 
-        <!-- User's Existing Beatpacks -->
-        <section class="user-beatpacks">
-            <h2>Your Beatpacks</h2>
-            <ul>
+        <!-- Contributions Section -->
+        <section class="contributions-section">
+            <h2 class="contributions-title">My Contributions</h2>
+            <div class="contributions-grid">
                 {% for beatpack in user_beatpacks %}
-                    <a href="{% url 'my_beatmap' name=beatpack.music_author title=beatpack.beatpack_title %}">
-                    <li>
-                        <img src="{{ beatpack.beatpack_picture.url }}" alt="{{ beatpack.beatpack_title }}" style="max-width: 300px; max-height: 300px;">
-                        <strong>Title:</strong> {{ beatpack.beatpack_title }}<br>
-                        <strong>Music Author:</strong> {{ beatpack.music_author }}<br>
-                        <strong>Number of Beatmaps:</strong> {{ beatpack.no_of_beatmaps }}<br>
-                        <strong>Number of Downloads:</strong> {{ beatpack.no_of_downloads }}<br>
-                    </li>
-                    </a>
+                <a href="{% url 'my_beatmap' name=user.username id=beatpack.beatpack_id beatpack_title=beatpack.beatpack_title %}" class="contribution-card">
+                    <img src="{{ beatpack.beatpack_picture.url }}" alt="{{ beatpack.beatpack_title }}">
+                    <div class="contribution-details">
+                        <strong>{{ beatpack.beatpack_title }}</strong>
+                        <p>{{ beatpack.music_author }}</p>
+                        <p>No. of downloads: {{ beatpack.no_of_downloads }}</p>
+                    </div>
+                </a>
                 {% empty %}
-                    <li>You have not created any beatpacks yet.</li>
+                <p>You have not created any beatpacks yet.</p>
                 {% endfor %}
-            </ul>
+            </div>
         </section>
     </main>
 

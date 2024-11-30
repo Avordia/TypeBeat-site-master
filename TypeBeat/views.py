@@ -22,9 +22,7 @@ def home(request):
     return HttpResponse("Hello, Django!")
 
 def homepage(request, name):
-    beatpacks = Beatpack.objects.all()  # Query all beatpacks
-    top_highscores = Highscore.objects.order_by('-total_score')[:10]  # Query top 10 users by highscore
-
+    beatpacks = Beatpack.objects.order_by('no_of_downloads')[:3]  
     # Assign a random color class to each beatpack
     for beatpack in beatpacks:
         beatpack.color_class = random.choice(color_classes)
@@ -36,7 +34,21 @@ def homepage(request, name):
             'name': name,
             'date': datetime.now(),
             'beatpacks': beatpacks,
-            'top_highscores': top_highscores,
+        }
+    )
+
+
+def viewAllBeatmap(request):
+    beatpacks = Beatpack.objects.all()
+    # Assign a random color class to each beatpack
+    for beatpack in beatpacks:
+        beatpack.color_class = random.choice(color_classes)
+    return render(
+        request,
+        'beatpack_page/beatpack_page.html',
+        {
+            'date': datetime.now(),
+            'beatpacks': beatpacks,
         }
     )
 
@@ -105,7 +117,7 @@ def upload_beatpack(request, name):
 
                 # Add a success message for the user
                 messages.success(request, f"Successfully uploaded Beatpack: {beatpack.beatpack_title}")
-                return redirect('BeatPack_Upload/BeatPack_Upload.html', name=name)
+                return redirect('upload_beatpack', name=name)
 
             except Exception as e:
                 print(f"Error during Beatpack processing: {str(e)}")  # Debug message
@@ -124,24 +136,85 @@ def upload_beatpack(request, name):
         "user_beatpacks": user_beatpacks,
     })
 
-def my_beatmap(request, name, title):
-    beatpack = get_object_or_404(Beatpack, beatpack_title=title)
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.db import transaction
+from .models import Beatmap, Beatpack
+from .forms import BeatmapUploadForm
+from .utils import parse_single_beatmap
+
+
+def my_beatmap(request, name, id, beatpack_title):
+    """
+    Handles the management of Beatmaps for a specific Beatpack, including:
+    - Listing Beatmaps
+    - Uploading a Beatmap file
+    - Editing or deleting existing Beatmaps
+    """
+    beatpack = get_object_or_404(Beatpack, beatpack_id=id)
     beatmaps = Beatmap.objects.filter(beatpack=beatpack)
+    difficulties = range(1, 6)  # Available difficulties (1 to 5)
 
-    if request.method == 'POST':
-        beatmap_id = request.POST.get('beatmap_id')
-        beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
-        if 'delete' in request.POST:
-            beatmap.delete()
+    if request.method == "POST":
+        # Check if this is a Beatmap file upload
+        if 'details_file' in request.FILES:
+            form = BeatmapUploadForm(request.POST, request.FILES)
+            if form.is_valid():
+                details_file = form.cleaned_data["details_file"]
+
+                try:
+                    # Parse the Beatmap file
+                    beatmap_data = parse_single_beatmap(details_file)
+
+                    # Create the Beatmap
+                    with transaction.atomic():
+                        Beatmap.objects.create(
+                            mapmaker=request.user,
+                            beatpack=beatpack,
+                            beatmap_title=beatmap_data["beatmap_title"],
+                            difficulty=beatmap_data["difficulty"],
+                            no_of_letters=beatmap_data["no_of_letters"],
+                            no_of_spaces=beatmap_data["no_of_spaces"],
+                            total_note_count=beatmap_data["no_of_letters"] + beatmap_data["no_of_spaces"],
+                        )
+
+                    messages.success(request, f"Successfully uploaded Beatmap: {beatmap_data['beatmap_title']}")
+                    return redirect("my_beatmap", name=name, id=id, beatpack_title=beatpack_title)
+
+                except Exception as e:
+                    messages.error(request, f"Error processing Beatmap file: {str(e)}")
+            else:
+                messages.error(request, "Invalid file upload.")
+
+        # Handle editing or deleting an existing Beatmap
         else:
-            beatmap.beatmap_title = request.POST.get('beatmap_title')
-            beatmap.no_of_letters = request.POST.get('no_of_letters')
-            beatmap.no_of_spaces = request.POST.get('no_of_spaces')
-            beatmap.difficulty = request.POST.get('difficulty')
-            beatmap.save()
+            beatmap_id = request.POST.get("beatmap_id")
+            beatmap = get_object_or_404(Beatmap, pk=beatmap_id)
 
-    return render(request, 'beatpack_beatmaps/beatpack_beatmaps.html', {'beatpack': beatpack, 'beatmaps': beatmaps})
+            if "delete" in request.POST:
+                beatmap.delete()
+                messages.success(request, "Beatmap deleted successfully.")
+            else:
+                # Update Beatmap details
+                beatmap.beatmap_title = request.POST.get("beatmap_title")
+                beatmap.no_of_letters = int(request.POST.get("no_of_letters"))
+                beatmap.no_of_spaces = int(request.POST.get("no_of_spaces"))
+                beatmap.difficulty = int(request.POST.get("difficulty"))
+                beatmap.total_note_count = beatmap.no_of_letters + beatmap.no_of_spaces
+                beatmap.save()
+                messages.success(request, "Beatmap updated successfully.")
 
+            return redirect("my_beatmap", name=name, id=id, beatpack_title=beatpack_title)
+
+    # Render the page with Beatmaps and the upload form
+    form = BeatmapUploadForm()
+    return render(request, "beatpack_beatmaps/beatpack_beatmaps.html", {
+        "beatpack": beatpack,
+        "beatmaps": beatmaps,
+        "difficulties": difficulties,
+        "form": form,
+        "name": name,
+    })
 
 def logout_view(request):
     logout(request)

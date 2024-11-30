@@ -32,40 +32,10 @@
                 <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
             </div>
         </div>
-    </header>
-
-    
-        <section class="hero">
-            <div class="hero-overlay">
-                <div class="hero-content">
-                    <img src="{% static 'images/heroLogo.png' %}" alt="Logo">
-                    <a href="https://m1.ppy.sh/r/osu!install.exe"><div class="cta-button">Download Now</div></a>
-                </div>
-            </div>
-        </section>
-        
-    <main>
-        <section class="features">
-            <h2 class="features-heading">Game Features</h2>
-            <div class="feature-cards">
-                <div class="feature">
-                    <h3>Exciting Beatmaps</h3>
-                    <p>Explore a variety of beatmaps created by talented mapmakers in this Open-Community based platform!.</p>
-                </div>
-                <div class="feature">
-                    <h3>Rising Legends</h3>
-                    <p>Compete with the players, and strive to best Rhytmn Typer! Challenge your friends and see who has the highest score!</p>
-                </div>
-                <div class="feature">
-                    <h3>Unique Masterpieces</h3>
-                    <p>Design and share your own beatmaps with the community. Keep that creative juice going! </p>
-                </div>
-            </div>
-        </section>
-        
-
+    </header>  
+    <main>     
+        <h2>BEATPACKS</h2>   
         <section class="BeatPacks">
-            <h2>POPULAR BEATPACKS</h2>
             <div class="beatPack-list">
                 {% for beatpack in beatpacks %}
                 <a href="{% url 'beatpack_detail' beatpack_id=beatpack.beatpack_id %}" class="beatpack-card {{ beatpack.color_class }}">
@@ -80,11 +50,6 @@
                         <p class="beatpack-info">No. of BeatMaps: {{ beatpack.no_of_beatmaps }}</p>
                         <p class="beatpack-info">No. of Downloads: {{ beatpack.no_of_downloads }}</p>
                         <p class="beatpack-author">by {{ beatpack.music_author }}</p>
-                    </div>
-        
-                    <!-- Play Button -->
-                    <div class="pack-button">
-                        <img src="{% static 'images/sprites/PlayT.png' %}" alt="Play Button" class="play-icon">
                     </div>
                 </a>
                 {% endfor %}
