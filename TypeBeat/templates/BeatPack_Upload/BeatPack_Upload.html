@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Beatpacks</title>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+        <link rel="stylesheet" href="{% static 'css/myCreations.css' %}">
+        <style>
+            body {
+                background-image: url("{% static 'images/BackgroundB.png' %}");
+                background-position: center;
+                background-repeat: repeat;
+                background-size: auto;
+            }
+        </style>
+    </head>
+<body>
+    <header>
+        <div class="navbar">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
+            <div class ="navLinkContainer">
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
+                <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Beatmaps</div></a>
+                <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        
+        <!-- Beatpack Upload Section -->
+        <section class="upload-beatpack">
+            <h1>UPLOAD BEATPACKS HERE</h1>
+            <form class="form" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="cta-button" type="submit">Upload</button>
+            </form>
+        </section>
+
+        <!-- Contributions Section -->
+        <section class="contributions-section">
+            <h2 class="contributions-title">My Contributions</h2>
+            <div class="contributions-grid">
+                {% for beatpack in user_beatpacks %}
+                <a href="{% url 'my_beatmap' name=user.username id=beatpack.beatpack_id beatpack_title=beatpack.beatpack_title %}" class="contribution-card">
+                    <img src="{{ beatpack.beatpack_picture.url }}" alt="{{ beatpack.beatpack_title }}">
+                    <div class="contribution-details">
+                        <strong>{{ beatpack.beatpack_title }}</strong>
+                        <p>{{ beatpack.music_author }}</p>
+                        <p>No. of downloads: {{ beatpack.no_of_downloads }}</p>
+                    </div>
+                </a>
+                {% empty %}
+                <p>You have not created any beatpacks yet.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Rhythm Game. All rights reserved.</p>
+    </footer>
+</body>
+</html>

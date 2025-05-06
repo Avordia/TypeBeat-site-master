@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beatmap Leaderboard</title>
+    <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/hero.css' %}">
+    <link rel="stylesheet" href="{% static 'css/leaderboard.css' %}">
+    <style>
+        body {
+            background-image: url("{% static 'images/BackgroundB.png' %}");
+            background-position: center;
+            background-repeat: repeat;
+            background-size: auto;
+        }
+        .no-scores-message {
+            text-align: center;
+            font-size: 1.5em;
+            color: #777;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
+            <div class="navLinkContainer">
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
+                <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
+                <a href="{% url 'beatpacks' %}"><div class="navLinks">Beatpacks</div></a>
+                <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="beatpack-hero" style="background-image: url('{{ beatpack.beatpack_picture.url }}');">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h1 class="beatpack-hero-title">{{ beatmap.beatmap_title }}</h1>
+                <p class="beatpack-hero-author">Beatmap by: {{ beatmap.mapmaker.username }}</p>
+            </div>
+            <div class="beatpack-hero-info-container">
+                <p class="beatpack-hero-info">No. of BeatMaps: {{ beatpack.no_of_beatmaps }}</p>
+                <p class="beatpack-hero-info">No. of Downloads: {{ beatpack.no_of_downloads }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Table or Message -->
+    <section class="leaderboard">
+        <h1>Leaderboard</h1>
+        {% if highscores %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>Max Combo</th>
+                        <th>Accuracy</th>
+                        <th>300</th>
+                        <th>100</th>
+                        <th>50</th>
+                        <th>Miss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for highscore in highscores %}
+                    <tr class="{% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% endif %}">
+                        <td>#{{ forloop.counter }}</td>  
+                        <td>{{ highscore.user.username }}</td> 
+                        <td>{{ highscore.total_score }}</td>
+                        <td>{{ highscore.highest_combo }}</td>
+                        <td>{{ highscore.accuracy }}%</td>
+                        <td>{{ highscore.perfect }}</td>
+                        <td>{{ highscore.great }}</td>
+                        <td>{{ highscore.good }}</td>
+                        <td>{{ highscore.miss }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-scores-message">No one has played the Beatmap yet.</p>
+        {% endif %}
+    </section>
+
+</body>
+</html>

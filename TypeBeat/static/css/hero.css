@@ -1,0 +1,79 @@
+/* Beatpack Hero Section */
+.beatpack-hero {
+    position: relative;
+    width: 100%;
+    height: 200px; /* Fixed height */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center; /* Centers content vertically */
+    justify-content: center; /* Centers content horizontally */
+}
+
+/* Dark Overlay */
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6); /* Adds a translucent dark effect */
+    border-radius: 15px;
+    z-index: 1; /* Sits below the content */
+}
+
+/* Content container */
+.hero-content {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust to exact center */
+    text-align: center;
+    z-index: 2; /* Ensure it is above the overlay */
+    color: white; /* White text for readability */
+    padding: 20px;
+}
+
+/* Title Styling */
+.beatpack-hero-title {
+    font-size: 2.5rem; /* Large title */
+    font-weight: 700;
+    margin: 10px 0;
+    color: #ffffff;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8); /* Glowing effect */
+}
+
+/* Author Information */
+.beatpack-hero-author {
+    font-size: 1.2rem;
+    margin: 5px 0;
+    color: #d3d3d3; /* Light grey for subtle design */
+}
+
+/* Info Section at the Bottom */
+.beatpack-hero-info-container {
+    position: absolute;
+    bottom: 10px; /* Very close to the bottom */
+    left: 0;
+    right: 0;
+    display: flex; /* Align items in a row */
+    justify-content: space-between; /* Space items evenly */
+    padding: 0 20px; /* Adds some padding on the sides */
+    z-index: 2; /* Ensure it is above the overlay */
+}
+
+/* Individual Info Boxes (Beatmaps and Downloads) */
+.beatpack-hero-info {
+    font-size: 1rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.1); /* Adds a subtle translucent background */
+    padding: 5px 15px; /* Compact padding */
+    border-radius: 10px; /* Rounded corners */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    color: #ffffff; /* White text */
+}

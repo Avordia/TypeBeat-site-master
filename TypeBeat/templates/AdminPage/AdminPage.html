@@ -5,86 +5,214 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Page</title>
     <style>
-        /* Basic styling */
-        table { width: 100%; border-collapse: collapse; }
-        table, th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .editable:hover { background-color: #e2f7e2; cursor: pointer; }
-        .delete-btn { color: red; cursor: pointer; }
-        img { width: 50px; height: 50px; }
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin: 20px 0;
+            font-size: 2rem;
+            color: #ffffff;
+        }
+
+        /* Main Layout */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .forms, .tables {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            flex: 1;
+            min-width: 300px;
+            box-sizing: border-box;
+        }
+
+        .forms {
+            flex: 0.4;
+        }
+
+        .tables {
+            flex: 0.6;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #cccccc;
+            margin-top: 0;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: #bbbbbb;
+        }
+
+        /* Forms */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        form button {
+            padding: 10px;
+            border: none;
+            background-color: #4caf50;
+            color: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #444444;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #333333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #2a2a2a;
+        }
+
+        .editable:hover {
+            background-color: #444444;
+            cursor: pointer;
+        }
+
+        .delete-btn {
+            color: #ff6666;
+            cursor: pointer;
+        }
+
+        img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .forms, .tables {
+                flex: 1 1 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Admin Page</h1>
+    <h1>Admin Dashboard</h1>
+    <div class="container">
+        <!-- Forms Section -->
+        <div class="forms">
+            <h2>Manage Data</h2>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h3>Add User</h3>
+                {{ user_form.as_p }}
+                <button type="submit" name="user_submit">Add User</button>
+            </form>
 
-    <div class="forms">
-        <h2>Add User</h2>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ user_form.as_p }}
-            <button type="submit" name="user_submit">Add User</button>
-        </form>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h3>Add Beatpack</h3>
+                {{ beatpack_form.as_p }}
+                <button type="submit" name="beatpack_submit">Add Beatpack</button>
+            </form>
 
-        <h2>Add Beatpack</h2>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ beatpack_form.as_p }}
-            <button type="submit" name="beatpack_submit">Add Beatpack</button>
-        </form>
+            <form method="POST">
+                {% csrf_token %}
+                <h3>Add Beatmap</h3>
+                {{ beatmap_form.as_p }}
+                <button type="submit" name="beatmap_submit">Add Beatmap</button>
+            </form>
 
-        <h2>Add Beatmap</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ beatmap_form.as_p }}
-            <button type="submit" name="beatmap_submit">Add Beatmap</button>
-        </form>
+            <form method="POST">
+                {% csrf_token %}
+                <h3>Add Highscore</h3>
+                {{ highscore_form.as_p }}
+                <button type="submit" name="highscore_submit">Add Highscore</button>
+            </form>
+        </div>
 
-        <h2>Add Highscore</h2>
-        <form method="POST">
-            {% csrf_token %}
-            {{ highscore_form.as_p }}
-            <button type="submit" name="highscore_submit">Add Highscore</button>
-        </form>
-    </div>
-
-    <div class="tables">
-        <!-- Users Table -->
-        <h2>Users</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th>Profile Picture</th>
-                    <th>Is Staff</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user.user_id }}</td>
-                    <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="username">{{ user.username }}</td>
-                    <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="email">{{ user.email }}</td>
-                    <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="password">{{ user.password }}</td>
-                    <td>
-                        {% if user.profile_picture %}
+        <!-- Tables Section -->
+        <div class="tables">
+            <h2>Data Overview</h2>
+            
+            <!-- Users Table -->
+            <h3>Users</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Profile Picture</th>
+                        <th>Is Staff</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.user_id }}</td>
+                        <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="username">{{ user.username }}</td>
+                        <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="email">{{ user.email }}</td>
+                        <td>
+                            {% if user.profile_picture %}
                             <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
-                        {% else %}
+                            {% else %}
                             No Image
-                        {% endif %}
-                    </td>
-                    <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="is_staff">{{ user.is_staff }}</td>
-                    <td><span class="delete-btn" data-model="user" data-id="{{ user.user_id }}">Delete</span></td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                            {% endif %}
+                        </td>
+                        <td class="editable" data-model="user" data-id="{{ user.user_id }}" data-field="is_staff">{{ user.is_staff }}</td>
+                        <td><span class="delete-btn" data-model="user" data-id="{{ user.user_id }}">Delete</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        
+            
 
-        <!-- Beatpacks Table -->
-        <h2>Beatpacks</h2>
+           <!-- Beatpacks Table -->
+        <h3>Beatpacks</h3>
         <table>
             <thead>
                 <tr>
@@ -101,15 +229,15 @@
                 {% for beatpack in beatpacks %}
                 <tr>
                     <td>{{ beatpack.beatpack_id }}</td>
-                    <td class="editable" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}" data-field="beatpack_title">{{ beatpack.beatpack_title }}</td>
-                    <td class="editable" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}" data-field="music_author">{{ beatpack.music_author }}</td>
-                    <td class="editable" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}" data-field="no_of_beatmaps">{{ beatpack.no_of_beatmaps }}</td>
-                    <td class="editable" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}" data-field="no_of_downloads">{{ beatpack.no_of_downloads }}</td>
+                    <td class="editable" data-field="beatpack_title">{{ beatpack.beatpack_title }}</td>
+                    <td class="editable" data-field="music_author">{{ beatpack.music_author }}</td>
+                    <td>{{ beatpack.no_of_beatmaps }}</td>
+                    <td>{{ beatpack.no_of_downloads }}</td>
                     <td>
                         {% if beatpack.beatpack_picture %}
-                            <img src="{{ beatpack.beatpack_picture.url }}" alt="Beatpack Picture">
+                        <img src="{{ beatpack.beatpack_picture.url }}" alt="Beatpack Picture">
                         {% else %}
-                            No Image
+                        No Image
                         {% endif %}
                     </td>
                     <td><span class="delete-btn" data-model="beatpack" data-id="{{ beatpack.beatpack_id }}">Delete</span></td>
@@ -117,9 +245,9 @@
                 {% endfor %}
             </tbody>
         </table>
-
+        
         <!-- Beatmaps Table -->
-        <h2>Beatmaps</h2>
+        <h3>Beatmaps</h3>
         <table>
             <thead>
                 <tr>
@@ -130,27 +258,28 @@
                     <th>No. of Letters</th>
                     <th>No. of Spaces</th>
                     <th>Mapmaker</th>
-                    <th>Actions</th>
+                    <th>BeatPackID</th>
                 </tr>
             </thead>
             <tbody>
                 {% for beatmap in beatmaps %}
                 <tr>
                     <td>{{ beatmap.beatmap_id }}</td>
-                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="beatmap_title">{{ beatmap.beatmap_title }}</td>
-                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="difficulty">{{ beatmap.difficulty }}</td>
-                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="total_note_count">{{ beatmap.total_note_count }}</td>
-                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="no_of_letters">{{ beatmap.no_of_letters }}</td>
-                    <td class="editable" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}" data-field="no_of_spaces">{{ beatmap.no_of_spaces }}</td>
+                    <td class="editable" data-field="beatmap_title">{{ beatmap.beatmap_title }}</td>
+                    <td>{{ beatmap.difficulty }}</td>
+                    <td>{{ beatmap.total_note_count }}</td>
+                    <td>{{ beatmap.no_of_letters }}</td>
+                    <td>{{ beatmap.no_of_spaces }}</td>
                     <td>{{ beatmap.mapmaker.username }}</td>
+                    <td>{{ beatmap.beatpack.beatpack_id }}</td>
                     <td><span class="delete-btn" data-model="beatmap" data-id="{{ beatmap.beatmap_id }}">Delete</span></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
+        
         <!-- Highscores Table -->
-        <h2>Highscores</h2>
+        <h3>Highscores</h3>
         <table>
             <thead>
                 <tr>
@@ -175,18 +304,20 @@
                     <td>{{ highscore.beatmap.beatmap_title }}</td>
                     <td>{{ highscore.mapmaker.username }}</td>
                     <td>{{ highscore.beatpack.beatpack_title }}</td>
-                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="total_score">{{ highscore.total_score }}</td>
-                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="highest_combo">{{ highscore.highest_combo }}</td>
-                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="accuracy">{{ highscore.accuracy }}</td>
-                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="perfect">{{ highscore.perfect }}</td>
-                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="great">{{ highscore.great }}</td>
-                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="good">{{ highscore.good }}</td>
-                    <td class="editable" data-model="highscore" data-id="{{ highscore.id }}" data-field="miss">{{ highscore.miss }}</td>
+                    <td>{{ highscore.total_score }}</td>
+                    <td>{{ highscore.highest_combo }}</td>
+                    <td>{{ highscore.accuracy }}</td>
+                    <td>{{ highscore.perfect }}</td>
+                    <td>{{ highscore.great }}</td>
+                    <td>{{ highscore.good }}</td>
+                    <td>{{ highscore.miss }}</td>
                     <td><span class="delete-btn" data-model="highscore" data-id="{{ highscore.id }}">Delete</span></td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        
+        </div>
     </div>
 
     <script>
@@ -261,4 +392,5 @@
         });
     </script>
 </body>
+
 </html>

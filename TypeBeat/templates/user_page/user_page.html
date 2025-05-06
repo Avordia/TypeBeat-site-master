@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+    <link rel="stylesheet" href="{% static 'css/Placeholder.css' %}">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
+            <div class ="navLinkContainer">
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
+                <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Beatmaps</div></a>
+                <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
+            </div>
+        </div>
+    </header>
+
+
+    <main>
+        <section class="user-details">
+            <h2>User Details</h2>
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
+            <p>Username: {{ user.username }}</p>
+            <p>Email: {{ user.email }}</p>
+            <a href="{% url 'edit_user' user.user_id %}" class="btn">Edit</a>
+            <form method="POST" action="{% url 'delete_user' user.user_id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn">Delete</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Rhythm Game. All rights reserved.</p>
+    </footer>
+</body>
+</html>

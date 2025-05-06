@@ -4,74 +4,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rhythm Game - Homepage</title>
+    <title>Homepage</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+    <link rel="stylesheet" href="{% static 'css/beatpack.css' %}">
+    <style>
+        .hero {
+            background: url("{% static 'images/typeBeat.gif' %}") center center;
+            background-size: cover;
+        }
+        body {
+            background-image: url("{% static 'images/BackgroundB.png' %}");
+            background-position: center;
+            background-repeat: repeat;
+            background-size: auto;
+        }
+    </style>
 </head>
 <body>
     <header>
         <div class="navbar">
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
-            <ul>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-                <li><a href="{% url 'homepage' name=user.username %}" class="navLinks">Home</a></li>
-            </ul>
+            <div class ="navLinkContainer">
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
+                <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
+                <a href="{% url 'beatpacks' %}"><div class="navLinks">Beatpacks</div></a>
+                <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
+            </div>
         </div>
     </header>
 
-    <main>
+    
         <section class="hero">
-            <video autoplay muted loop class="background-video">
-                <source src="{% static 'videos/background.mp4' %}" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <div class="hero-content">
-                <h1>Welcome to TypeBeat!</h1>
-                <p>Type through the Rhytmn!</p>
-                <a href="{% url 'signup' %}" class="cta-button">Download Now!</a>
-            </div>
-        </section>
-
-        <section class="features">
-            <h2>Game Features</h2>
-            <div class="feature">
-                <h3>Exciting Beatmaps</h3>
-                <p>Explore a variety of beatmaps created by talented mapmakers.</p>
-            </div>
-            <div class="feature">
-                <h3>Compete with Friends</h3>
-                <p>Challenge your friends and see who has the highest score!</p>
-            </div>
-            <div class="feature">
-                <h3>Create Your Own</h3>
-                <p>Design and share your own beatmaps with the community.</p>
-            </div>
-        </section>
-
-        <section class="beatmaps">
-            <h2>Popular Beatmaps</h2>
-            <div class="beatmap-list">
-                {% for beatmap in beatmaps %}
-                <div class="beatmap-card">
-                    <h3>{{ beatmap.beatmap_title }}</h3>
-                    <p>Difficulty: {{ beatmap.difficulty }}</p>
-                    <p>Mapmaker: {{ beatmap.mapmaker.username }}</p>
-                    <a href="{% url 'beatmap_detail' beatmap_id=beatmap.beatmap_id %}" class="beatmap-button">Play Now</a>
+            <div class="hero-overlay">
+                <div class="hero-content">
+                    <img src="{% static 'images/heroLogo.png' %}" alt="Logo">
+                    <a href="https://m1.ppy.sh/r/osu!install.exe"><div class="cta-button">Download Now</div></a>
                 </div>
+            </div>
+        </section>
+        
+    <main>
+        <section class="features">
+            <h2 class="features-heading">Game Features</h2>
+            <div class="feature-cards">
+                <div class="feature">
+                    <h3>Exciting Beatmaps</h3>
+                    <p>Explore a variety of beatmaps created by talented mapmakers in this Open-Community based platform!.</p>
+                </div>
+                <div class="feature">
+                    <h3>Rising Legends</h3>
+                    <p>Compete with the players, and strive to best Rhytmn Typer! Challenge your friends and see who has the highest score!</p>
+                </div>
+                <div class="feature">
+                    <h3>Unique Creations</h3>
+                    <p>Design and share your own beatmaps with the community. Keep that creative juice going! </p>
+                </div>
+            </div>
+        </section>
+        
+
+        <section class="BeatPacks">
+            <h2>POPULAR BEATPACKS</h2>
+            <div class="beatPack-list">
+                {% for beatpack in beatpacks %}
+                <a href="{% url 'beatpack_detail' beatpack_id=beatpack.beatpack_id %}" class="beatpack-card {{ beatpack.color_class }}">
+                    <!-- Beatpack Image -->
+                    <div class="beatpack-image-container">
+                        <img src="{{ beatpack.beatpack_picture.url }}" alt="{{ beatpack.beatpack_title }} image" class="beatpack-image">
+                    </div>
+        
+                    <!-- Beatpack Details -->
+                    <div class="beatpack-details">
+                        <h3 class="beatpack-title">{{ beatpack.beatpack_title }}</h3>
+                        <p class="beatpack-info">No. of BeatMaps: {{ beatpack.no_of_beatmaps }}</p>
+                        <p class="beatpack-info">No. of Downloads: {{ beatpack.no_of_downloads }}</p>
+                        <p class="beatpack-author">by {{ beatpack.music_author }}</p>
+                    </div>
+        
+                    <!-- Play Button -->
+                    <div class="pack-button">
+                        <img src="{% static 'images/sprites/PlayT.png' %}" alt="Play Button" class="play-icon">
+                    </div>
+                </a>
                 {% endfor %}
             </div>
         </section>
-
-        <section class="ranking">
-            <h2>Top Players</h2>
-            <ol class="ranking-list">
-                {% for user in top_users %}
-                <li>{{ user.username }} - {{ user.highscores }} points</li>
-                {% endfor %}
-            </ol>
-        </section>
+        
     </main>
 
     <footer>

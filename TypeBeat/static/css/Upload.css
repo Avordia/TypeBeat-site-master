@@ -1,0 +1,183 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a; /* Dark background */
+    color: #f0f0f0; /* Light text */
+    margin: 0;
+    padding: 0;
+}
+
+h2 {
+    text-align: center;
+    color: #ffffff; /* Light text for dark background */
+}
+
+/* Navbar */
+header {
+    background-color: #0e0e0e;
+    padding: 10px 20px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navLogo {
+    height: 50px;
+}
+
+.navbar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+.navbar li {
+    margin: 0 15px;
+}
+
+.navLinks {
+    color: #ffffff; /* Light text */
+    text-decoration: none;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+}
+
+.navLinks:hover {
+    color: #ff6600; /* Highlight with orange */
+    text-decoration: underline;
+}
+
+/* Hero Section */
+.hero {
+    text-align: center;
+    padding: 50px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    background-size: cover;
+    background: url('{{ background_image_url }}') center center no-repeat;
+}
+
+.hero-content {
+    color: #ffffff; /* Ensure contrast with dark background */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7); /* Add text shadow for readability */
+}
+
+.cta-button {
+    background-color: #ff6600; /* Orange button */
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #e65c00; /* Darker orange on hover */
+}
+
+/* Main Content - Upload Beatpack Section */
+.upload-beatpack {
+    max-width: 600px;
+    margin: 40px auto; /* Center the form with margin */
+    background: #2a2a2a; /* Darker background for form */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); /* Enhanced shadow for depth */
+    color: #f0f0f0;
+    font-size: 16px;
+}
+
+.upload-beatpack h2 {
+    margin-bottom: 20px; /* Add spacing below the title */
+    font-size: 24px; /* Increase size for emphasis */
+    text-align: center; /* Center align the heading */
+}
+
+.upload-beatpack form {
+    display: flex;
+    flex-direction: column; /* Arrange elements vertically */
+    gap: 20px; /* Add consistent spacing between inputs */
+}
+
+.upload-beatpack label {
+    font-weight: bold;
+    margin-bottom: 5px; /* Space between label and input */
+    color: #ffffff;
+}
+
+.upload-beatpack input[type="text"],
+.upload-beatpack input[type="number"],
+.upload-beatpack input[type="file"],
+.upload-beatpack select {
+    padding: 12px; /* Increased padding for better usability */
+    border: 1px solid #444; /* Match dark theme */
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #1a1a1a; /* Dark input background */
+    color: #f0f0f0; /* Light text */
+    outline: none; /* Remove default outline */
+    transition: border-color 0.3s ease; /* Smooth focus effect */
+}
+
+.upload-beatpack input:focus,
+.upload-beatpack select:focus {
+    border-color: #4caf50; /* Green border on focus */
+}
+
+.upload-beatpack input[type="file"] {
+    padding: 5px; /* Adjusted padding for file input */
+    cursor: pointer; /* Add pointer cursor for clarity */
+}
+
+.upload-beatpack button[type="submit"] {
+    background-color: #4caf50; /* Green button */
+    color: white;
+    font-size: 18px; /* Slightly larger font size */
+    border: none;
+    border-radius: 5px;
+    padding: 12px; /* Increased padding for better accessibility */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.upload-beatpack button[type="submit"]:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: translateY(-2px); /* Slight upward motion */
+}
+
+.upload-beatpack button[type="submit"]:active {
+    transform: translateY(0); /* Return to original position on click */
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .upload-beatpack {
+        padding: 20px; /* Reduce padding for smaller screens */
+    }
+
+    .upload-beatpack h2 {
+        font-size: 20px; /* Adjust heading size */
+    }
+
+    .upload-beatpack button[type="submit"] {
+        font-size: 16px; /* Adjust button font size */
+    }
+}
+
+
+/* Footer */
+footer {
+    text-align: center;
+    background-color: #0e0e0e;
+    color: #f0f0f0;
+    padding: 10px 0;
+    font-size: 14px;
+}

@@ -1,0 +1,144 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Beatmaps</title>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
+        <link rel="stylesheet" href="{% static 'css/hero.css' %}">
+        <link rel="stylesheet" href="{% static 'css/editList.css' %}">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <style>
+            body {
+                background-image: url("{% static 'images/BackgroundB.png' %}");
+                background-position: center;
+                background-repeat: repeat;
+                background-size: auto;
+            }
+            .edit-icon {
+                cursor: pointer;
+                color: #007bff;
+            }
+            .hidden {
+                display: none;
+            }
+        </style>
+    </head>
+<body>
+    <header>
+        <div class="navbar">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
+            <div class="navLinkContainer">
+                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
+                <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
+                <a href="{% url 'beatpacks' %}"><div class="navLinks">Beatpacks</div></a>
+                <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="beatpack-hero" style="background-image: url('{{ beatpack.beatpack_picture.url }}');">
+        <div class="hero-overlay">
+            <div class="hero-content">
+                <h1 class="beatpack-hero-title">{{ beatpack.beatpack_title }}</h1>
+                <p class="beatpack-hero-author">Author: {{ beatpack.music_author }}</p>
+            </div>
+        </div>
+    </div>
+    <main>
+        <h1>Your Creations</h1>
+        <table class="beatmap-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>No. of Letters</th>
+                    <th>No. of Spaces</th>
+                    <th>Difficulty</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for beatmap in beatmaps %}
+                <tr data-row-id="{{ beatmap.beatmap_id }}">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="beatmap_id" value="{{ beatmap.beatmap_id }}">
+        
+                        <!-- Beatmap Title -->
+                        <td>
+                            <span class="view-mode">{{ beatmap.beatmap_title }}</span>
+                            <input class="edit-mode hidden" type="text" name="beatmap_title" value="{{ beatmap.beatmap_title }}">
+                        </td>
+        
+                        <!-- Number of Letters -->
+                        <td>
+                            <span class="view-mode">{{ beatmap.no_of_letters }}</span>
+                            <input class="edit-mode hidden" type="number" name="no_of_letters" value="{{ beatmap.no_of_letters }}">
+                        </td>
+        
+                        <!-- Number of Spaces -->
+                        <td>
+                            <span class="view-mode">{{ beatmap.no_of_spaces }}</span>
+                            <input class="edit-mode hidden" type="number" name="no_of_spaces" value="{{ beatmap.no_of_spaces }}">
+                        </td>
+        
+                        <!-- Difficulty -->
+                        <td>
+                            <span class="view-mode">{{ beatmap.difficulty }}</span>
+                            <select class="edit-mode hidden" name="difficulty">
+                                {% for i in difficulties %}
+                                <option value="{{ i }}" {% if beatmap.difficulty == i %}selected{% endif %}>
+                                    {{ i }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+        
+                        <!-- Actions -->
+                        <td class="actions">
+                            <span class="view-mode edit-icon material-icons">EDIT</span>
+                            <button class="edit-mode hidden" type="submit">Save</button>
+                            <button class="edit-mode hidden" type="submit" name="delete" value="delete">Delete</button>
+                        </td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <section class="upload-beatpack">
+            <form class="form" method="POST" enctype="multipart/form-data" id="upload-form">
+                {% csrf_token %}
+                <input type="file" id="file-input" name="details_file">
+                <label for="file-input" class="upload-button">Add Beatmap</label>
+            </form>
+        </section>
+      
+    </main>
+    
+    <script>
+        $(document).ready(function () {
+            $('.edit-icon').on('click', function () {
+                // Get the closest `tr` for the clicked edit icon
+                const row = $(this).closest('tr');
+
+                // Toggle visibility of view-mode and edit-mode elements within the row
+                row.find('.view-mode').toggleClass('hidden');
+                row.find('.edit-mode').toggleClass('hidden');
+            });
+        });
+    </script>
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const form = document.getElementById('upload-form');
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                form.submit(); // Automatically submits the form
+            }
+        });
+    </script>
+    
+</body>
+</html>

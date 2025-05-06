@@ -1,0 +1,92 @@
+/* Main Table Styling */
+table {
+  width: 100%;
+  border-spacing: 0 10px; /* Adds gaps between rows */
+  border-radius: 10px; /* Subtle roundness for the entire table */
+  margin: 20px 0;
+  font-size: 1rem;
+  text-align: left;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #00000038; /* Slightly transparent black */
+  overflow: hidden; /* Ensures content doesn't overflow rounded corners */
+}
+
+/* Table Header */
+thead tr {
+  
+  background-color: #ff6600; 
+  color: white;
+  border: 2px solid rgb(0, 0, 0); 
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+thead th {
+  padding: 12px 15px;
+  text-align: center;
+}
+
+/* Table Rows */
+tbody tr {
+  border: 2px solid rgb(0, 0, 0); /* Red border for each row */
+  background-color: rgb(53, 53, 53); 
+  color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden; 
+}
+
+tbody tr:not(:last-child) {
+  margin-bottom:100px; 
+}
+
+/* Table Cells */
+tbody td {
+  padding: 12px 15px;
+  text-align: center;
+}
+
+/* Hover Effect for Rows */
+tbody tr:hover {
+  background-color: #ffffff1e; /* Light gray on hover */
+  transform: scale(1.005); /* Slight enlargement on hover */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Adds shadow for hover effect */
+}
+
+/* Action Buttons */
+button {
+  background-color: #f76c6c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #ff4c4c;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+/* Style the label to look like a button */
+label.upload-button {
+  display: inline-block;
+  background-color: #4cafaa;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s;
+}
+
+label.upload-button:hover {
+  background-color: #FE08FD;
+}

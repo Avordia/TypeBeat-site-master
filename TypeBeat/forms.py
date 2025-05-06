@@ -1,5 +1,6 @@
 # TypeBeat/forms.py
 from django import forms
+import zipfile
 from .models import User, Beatpack, Beatmap, Highscore
 
 
@@ -50,6 +51,15 @@ class BeatPackForm(forms.ModelForm):
             'no_of_downloads',
             'beatpack_picture'
         ]
+class UploadForm(forms.ModelForm):
+    class Meta:
+        model = Beatpack
+        fields = [
+            'beatpack_title',
+            'music_author',
+            'no_of_beatmaps',
+            'beatpack_picture'
+        ]
 
 
 class BeatmapForm(forms.ModelForm):
@@ -65,6 +75,23 @@ class BeatmapForm(forms.ModelForm):
             'beatpack'
         ]  # Updated fields
 
+class BeatpackUploadForm(forms.Form):
+    details_file = forms.FileField(label="Beatpack Details (.txt)", required=True)
+    beatpack_image = forms.ImageField(label="Beatpack Picture", required=True)
+
+    def clean_details_file(self):
+        file = self.cleaned_data['details_file']
+        if not file.name.endswith('.txt'):
+            raise forms.ValidationError("Only .txt files are allowed for the details file.")
+        return file
+    
+class BeatmapUploadForm(forms.Form):
+    details_file = forms.FileField(required=True, label="Beatmap File")
+    def clean_details_file(self):
+        file = self.cleaned_data['details_file']
+        if not file.name.endswith('.txt'):
+            raise forms.ValidationError("Only .txt files are allowed for the details file.")
+        return file
 
 class HighscoreForm(forms.ModelForm):
     class Meta:

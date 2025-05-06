@@ -1,0 +1,49 @@
+/* Leaderboard Section */
+
+.leaderboard {
+    margin: 2rem;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+thead th {
+    background-color: #444;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #333;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #222;
+}
+
+td, th {
+    padding: 1rem;
+    text-align: center;
+    color: white;
+}
+
+/* Top 3 Rank Styles */
+.rank-1 {
+    background-color: red; /* Red for Rank 1 */
+    color: white;
+}
+
+.rank-2 {
+    background-color: blue; /* Blue for Rank 2 */
+    color: white;
+}
+
+.rank-3 {
+    background-color: green; /* Green for Rank 3 */
+    color: white;
+}
