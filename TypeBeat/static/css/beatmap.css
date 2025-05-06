@@ -1,0 +1,100 @@
+/* Grid container for beatmaps */
+.beatmap-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 cards per row */
+    gap: 20px; /* Space between cards */
+    padding: 20px;
+    border-style: solid;
+    border-color: whitesmoke;
+    border-width: 1.2px;
+    border-radius: 20px;
+    align-content: center;
+}
+
+.center-box{
+    align-content: center;
+}
+
+/* Center the button horizontally */
+.beatmap-download-container {
+    display: flex;
+    justify-content: center; /* Horizontally center the button */
+    margin-top: 20px; /* Space above the button */
+}
+
+/* Style for the download button */
+.beatmap-download-button {
+    border-radius: 10px;
+    padding: 10px 20px; /* Add padding for a more button-like appearance */
+    background-color: #ff6600; /* Orange background */
+    color: #ffffff; /* White text */
+    font-size: 16px; /* Adjust font size */
+    font-family: 'Montserrat', sans-serif;
+    text-decoration: none; /* Remove underline */
+    cursor: pointer; /* Add pointer cursor */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth effects */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+    margin-bottom: 50px;
+}
+
+/* Hover effect for the button */
+.beatmap-download-button:hover {
+    background-color: #e55a00; /* Darker orange on hover */
+    transform: scale(1.05); /* Slightly enlarge the button */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3); /* Enhance shadow */
+}
+
+
+.beatmap-section{
+    padding: 20px;
+}
+.beatmap-section h2{
+    font-size: 40px;
+    text-align: center;
+}
+.beatmap-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Default dark overlay */
+    transition: background-color 0.2s;
+    z-index: 0; /* Keep it behind the text */
+}
+
+/* Text and other content */
+.beatmap-card h3,
+.beatmap-card p {
+    position: relative;
+    z-index: 1; /* Keep text above overlay */
+}
+
+/* Difficulty colors as translucent overlays */
+.beatmap-card.blue::before {
+    background-color: rgba(97, 70, 227, 0.5); /* Semi-transparent blue */
+}
+
+.beatmap-card.pink::before {
+    background-color: rgba(254, 8, 253, 0.5); /* Semi-transparent pink */
+}
+
+.beatmap-card.orange::before {
+    background-color: rgba(255, 110, 0, 0.5); /* Semi-transparent orange */
+}
+
+.beatmap-card.red::before {
+    background-color: rgba(237, 46, 46, 0.5); /* Semi-transparent red */
+}
+
+.beatmap-card.black::before {
+    background-color: rgba(0, 0, 0, 0.938); /* Slightly darker black */
+}
+
+/* Hover effect */
+.beatmap-card:hover::before {
+    background-color: rgba(255, 255, 255, 0.3); /* Highlight effect */
+}
+
+.beatmap-card:hover {
+    transform: scale(1.05); /* Subtle zoom on hover */
+    box-shadow: 0px 8px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow */
+}

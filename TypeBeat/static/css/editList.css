@@ -1,120 +1,92 @@
-.beatmap-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+/* Main Table Styling */
+table {
+  width: 100%;
+  border-spacing: 0 10px; /* Adds gaps between rows */
+  border-radius: 10px; /* Subtle roundness for the entire table */
+  margin: 20px 0;
+  font-size: 1rem;
+  text-align: left;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #00000038; /* Slightly transparent black */
+  overflow: hidden; /* Ensures content doesn't overflow rounded corners */
 }
 
-.beatmap-row {
-    display: flex;
-    flex-wrap: nowrap;
-    padding: 10px;
-    align-items: center;
-    justify-content: space-between;
-    background-color: rgba(0, 0, 0, 0.425);
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+/* Table Header */
+thead tr {
+  
+  background-color: #ff6600; 
+  color: white;
+  border: 2px solid rgb(0, 0, 0); 
+  text-transform: uppercase;
+  font-weight: bold;
 }
 
-/* Header row styling */
-.beatmap-header {
-    font-weight: bold;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    text-align: center;
+thead th {
+  padding: 12px 15px;
+  text-align: center;
 }
 
-/* Individual cell styling */
-.beatmap-cell {
-    flex: 1; /* All cells are equally spaced */
-    padding: 5px 10px;
-    text-align: center;
-    color: #fff; /* Text color for better contrast */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+/* Table Rows */
+tbody tr {
+  border: 2px solid rgb(0, 0, 0); /* Red border for each row */
+  background-color: rgb(53, 53, 53); 
+  color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); 
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden; 
 }
 
-/* Smaller size for action buttons */
-.actions {
-    flex: 0.5; /* Reduce width for action buttons */
-    display: flex;
-    gap: 5px;
-    justify-content: center;
-    align-items: center;
+tbody tr:not(:last-child) {
+  margin-bottom:100px; 
 }
 
-/* Hover effect for rows */
-.beatmap-row:hover {
-    background-color: rgba(255, 255, 255, 0.1); /* Slight light overlay */
+/* Table Cells */
+tbody td {
+  padding: 12px 15px;
+  text-align: center;
 }
 
-/* Button styling */
+/* Hover Effect for Rows */
+tbody tr:hover {
+  background-color: #ffffff1e; /* Light gray on hover */
+  transform: scale(1.005); /* Slight enlargement on hover */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Adds shadow for hover effect */
+}
+
+/* Action Buttons */
 button {
-    padding: 5px 10px;
-    font-size: 14px;
-    color: #fff;
-    background-color: #007bff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: opacity 0.3s ease, background-color 0.3s ease;
+  background-color: #f76c6c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
 }
 
 button:hover {
-    opacity: 0.8;
-    background-color: #0056b3; /* Darker shade on hover */
+  background-color: #ff4c4c;
 }
 
-/* Edit Icon Styling */
-.edit-icon {
-    font-size: 20px;
-    cursor: pointer;
-    color: #007bff;
-    transition: transform 0.2s ease, color 0.3s ease;
+input[type="file"] {
+  display: none;
 }
 
-.edit-icon:hover {
-    transform: scale(1.1);
-    color: #0056b3; /* Darker shade on hover */
+/* Style the label to look like a button */
+label.upload-button {
+  display: inline-block;
+  background-color: #4cafaa;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s;
 }
 
-/* Hidden mode for edit-view toggling */
-.hidden {
-    display: none !important;
-}
-
-/* Styling for form inputs in edit mode */
-input[type="text"], input[type="number"], select {
-    width: 100%;
-    padding: 5px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    box-sizing: border-box;
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.9);
-    color: #000;
-}
-
-input[type="text"]:focus, input[type="number"]:focus, select:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Responsiveness for smaller screens */
-@media (max-width: 768px) {
-    .beatmap-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .actions {
-        justify-content: flex-start;
-    }
-
-    .beatmap-cell {
-        text-align: left;
-    }
+label.upload-button:hover {
+  background-color: #FE08FD;
 }

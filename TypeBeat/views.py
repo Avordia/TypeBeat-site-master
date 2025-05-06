@@ -118,7 +118,7 @@ def upload_beatpack(request, name):
 
                 # Add a success message for the user
                 messages.success(request, f"Successfully uploaded Beatpack: {beatpack.beatpack_title}")
-                return redirect('BeatPack_Upload/BeatPack_Upload.html', name=name)
+                return redirect('upload_beatpack', name=name)
 
             except Exception as e:
                 print(f"Error during Beatpack processing: {str(e)}")  # Debug message
@@ -243,11 +243,25 @@ def download_beatpack(request, beatpack_id):
     beatpack.save()
 
     # Create the content of the .txt file
-    content = f"[Beatpack]\nbeatpack_title: {beatpack.beatpack_title}\nmusic_author: {beatpack.music_author}\n\n"
+    content = f"[Beatpack]\n"
+    content += f"beatpack_id: {beatpack.beatpack_id}\n"
+    content += f"beatpack_title: {beatpack.beatpack_title}\n"
+    content += f"music_author: {beatpack.music_author}\n"
+    content += f"no_of_beatmaps: {beatpack.no_of_beatmaps}\n"
+    content += f"no_of_downloads: {beatpack.no_of_downloads}\n\n"
+
     for beatmap in beatmaps:
-        content += f"[Beatmap]\nbeatmap_title: {beatmap.beatmap_title}\ndifficulty: {beatmap.difficulty}\n"
-        content += f"no_of_letters: {beatmap.no_of_letters}\nno of spaces: {beatmap.no_of_spaces}\n"
-        content += "\n"
+        content += f"[Beatmap]\n"
+        content += f"beatmap_id: {beatmap.beatmap_id}\n"
+        content += f"beatmap_title: {beatmap.beatmap_title}\n"
+        content += f"difficulty: {beatmap.difficulty}\n"
+        content += f"total_note_count: {beatmap.total_note_count}\n"
+        content += f"no_of_letters: {beatmap.no_of_letters}\n"
+        content += f"no_of_spaces: {beatmap.no_of_spaces}\n"
+        content += f"mapmaker_id: {beatmap.mapmaker.user_id}\n"
+        content += f"mapmaker_username: {beatmap.mapmaker.username}\n"
+        content += f"beatpack_id: {beatmap.beatpack.beatpack_id}\n"
+        content += f"beatpack_title: {beatmap.beatpack.beatpack_title}\n\n"
 
     # Create the response
     response = HttpResponse(content, content_type='text/plain')

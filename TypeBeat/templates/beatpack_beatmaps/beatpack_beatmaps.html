@@ -49,80 +49,96 @@
     </div>
     <main>
         <h1>Your Creations</h1>
-        <div class="beatmap-container">
-            <div class="beatmap-row beatmap-header">
-                <div class="beatmap-cell">Title</div>
-                <div class="beatmap-cell">No. of Letters</div>
-                <div class="beatmap-cell">No. of Spaces</div>
-                <div class="beatmap-cell">Difficulty</div>
-                <div class="beatmap-cell">Actions</div>
-            </div>
-
-            {% for beatmap in beatmaps %}
-            <div class="beatmap-row" data-row-id="{{ beatmap.beatmap_id }}">
-                <!-- View Mode -->
-                <div class="view-mode">
-                    <div class="beatmap-cell">{{ beatmap.beatmap_title }}</div>
-                    <div class="beatmap-cell">{{ beatmap.no_of_letters }}</div>
-                    <div class="beatmap-cell">{{ beatmap.no_of_spaces }}</div>
-                    <div class="beatmap-cell">{{ beatmap.difficulty }}</div>
-                    <div class="beatmap-cell actions">
-                        <span class="edit-icon material-icons">edit</span>
-                    </div>
-                </div>
-
-                <!-- Edit Mode -->
-                <div class="edit-mode hidden">
+        <table class="beatmap-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>No. of Letters</th>
+                    <th>No. of Spaces</th>
+                    <th>Difficulty</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for beatmap in beatmaps %}
+                <tr data-row-id="{{ beatmap.beatmap_id }}">
                     <form method="POST">
                         {% csrf_token %}
                         <input type="hidden" name="beatmap_id" value="{{ beatmap.beatmap_id }}">
-                        <div class="beatmap-cell">
-                            <input type="text" name="beatmap_title" value="{{ beatmap.beatmap_title }}">
-                        </div>
-                        <div class="beatmap-cell">
-                            <input type="number" name="no_of_letters" value="{{ beatmap.no_of_letters }}">
-                        </div>
-                        <div class="beatmap-cell">
-                            <input type="number" name="no_of_spaces" value="{{ beatmap.no_of_spaces }}">
-                        </div>
-                        <div class="beatmap-cell">
-                            <select name="difficulty">
+        
+                        <!-- Beatmap Title -->
+                        <td>
+                            <span class="view-mode">{{ beatmap.beatmap_title }}</span>
+                            <input class="edit-mode hidden" type="text" name="beatmap_title" value="{{ beatmap.beatmap_title }}">
+                        </td>
+        
+                        <!-- Number of Letters -->
+                        <td>
+                            <span class="view-mode">{{ beatmap.no_of_letters }}</span>
+                            <input class="edit-mode hidden" type="number" name="no_of_letters" value="{{ beatmap.no_of_letters }}">
+                        </td>
+        
+                        <!-- Number of Spaces -->
+                        <td>
+                            <span class="view-mode">{{ beatmap.no_of_spaces }}</span>
+                            <input class="edit-mode hidden" type="number" name="no_of_spaces" value="{{ beatmap.no_of_spaces }}">
+                        </td>
+        
+                        <!-- Difficulty -->
+                        <td>
+                            <span class="view-mode">{{ beatmap.difficulty }}</span>
+                            <select class="edit-mode hidden" name="difficulty">
                                 {% for i in difficulties %}
                                 <option value="{{ i }}" {% if beatmap.difficulty == i %}selected{% endif %}>
                                     {{ i }}
                                 </option>
                                 {% endfor %}
                             </select>
-                        </div>
-                        <div class="beatmap-cell actions">
-                            <button type="submit">Save</button>
-                            <button type="submit" name="delete" value="delete">Delete</button>
-                        </div>
+                        </td>
+        
+                        <!-- Actions -->
+                        <td class="actions">
+                            <span class="view-mode edit-icon material-icons">EDIT</span>
+                            <button class="edit-mode hidden" type="submit">Save</button>
+                            <button class="edit-mode hidden" type="submit" name="delete" value="delete">Delete</button>
+                        </td>
                     </form>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <section class="upload-beatpack">
+            <form class="form" method="POST" enctype="multipart/form-data" id="upload-form">
+                {% csrf_token %}
+                <input type="file" id="file-input" name="details_file">
+                <label for="file-input" class="upload-button">Add Beatmap</label>
+            </form>
+        </section>
+      
     </main>
+    
     <script>
         $(document).ready(function () {
             $('.edit-icon').on('click', function () {
-                const row = $(this).closest('.beatmap-row');
-                row.find('.view-mode').addClass('hidden');
-                row.find('.edit-mode').removeClass('hidden');
+                // Get the closest `tr` for the clicked edit icon
+                const row = $(this).closest('tr');
+
+                // Toggle visibility of view-mode and edit-mode elements within the row
+                row.find('.view-mode').toggleClass('hidden');
+                row.find('.edit-mode').toggleClass('hidden');
             });
         });
     </script>
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const form = document.getElementById('upload-form');
 
-    <div class="file-upload-container">
-        <h2>Upload Beatmap</h2>
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label for="details_file">Choose a .txt file:</label>
-            <input type="file" id="details_file" name="details_file" accept=".txt">
-            <button type="submit">Upload</button>
-        </form>
-    </div>
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                form.submit(); // Automatically submits the form
+            }
+        });
+    </script>
     
 </body>
 </html>

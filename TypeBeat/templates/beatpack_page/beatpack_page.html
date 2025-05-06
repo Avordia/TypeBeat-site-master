@@ -25,16 +25,18 @@
     <header>
         <div class="navbar">
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
-            <div class ="navLinkContainer">
+            <div class="navLinkContainer">
                 <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
                 <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
                 <a href="{% url 'beatpacks' %}"><div class="navLinks">Beatpacks</div></a>
                 <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
             </div>
         </div>
-    </header>  
-    <main>     
-        <h2>BEATPACKS</h2>   
+    </header>
+    <main>
+        <div class="center-box">     
+            <h2>BEATPACKS</h2>   
+        </div>
         <section class="BeatPacks">
             <div class="beatPack-list">
                 {% for beatpack in beatpacks %}
@@ -59,7 +61,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2023 Rhythm Game. All rights reserved.</p>
+        <p>&copy; 2023 TypeBeat. All rights reserved.</p>
     </footer>
 </body>
 </html>

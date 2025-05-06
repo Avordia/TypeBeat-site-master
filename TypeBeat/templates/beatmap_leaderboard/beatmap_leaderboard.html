@@ -7,6 +7,7 @@
     <title>Beatmap Leaderboard</title>
     <link rel="stylesheet" href="{% static 'css/gameTemplate.css' %}">
     <link rel="stylesheet" href="{% static 'css/hero.css' %}">
+    <link rel="stylesheet" href="{% static 'css/leaderboard.css' %}">
     <style>
         body {
             background-image: url("{% static 'images/BackgroundB.png' %}");
@@ -14,22 +15,27 @@
             background-repeat: repeat;
             background-size: auto;
         }
+        .no-scores-message {
+            text-align: center;
+            font-size: 1.5em;
+            color: #777;
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="navbar">
             <img src="{% static 'images/logo.png' %}" alt="Logo" class="navLogo">
-            <div class ="navLinkContainer">
+            <div class="navLinkContainer">
                 <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Home</div></a>
                 <a href="{% url 'upload_beatpack' name=user.username %}"><div class="navLinks">My Creations</div></a>
-                <a href="{% url 'homepage' name=user.username %}"><div class="navLinks">Beatmaps</div></a>
+                <a href="{% url 'beatpacks' %}"><div class="navLinks">Beatpacks</div></a>
                 <a href="{% url 'logout' %}"><div class="logout">Logout</div></a>
             </div>
         </div>
     </header>
 
-    
     <div class="beatpack-hero" style="background-image: url('{{ beatpack.beatpack_picture.url }}');">
         <div class="hero-overlay">
             <div class="hero-content">
@@ -42,60 +48,45 @@
             </div>
         </div>
     </div>
-    
-    <section class="leaderboard-section">
+
+    <!-- Leaderboard Table or Message -->
+    <section class="leaderboard">
         <h1>Leaderboard</h1>
-        <ul>
-            {% for highscore in highscores %}
-            <li>
-                <p>User: {{ highscore.user.username }}</p>
-                <p>
-                    {{ highscore.total_score }}, 
-                    {{ highscore.highest_combo }}x, 
-                    {{ highscore.accuracy }}%, 
-                    {{ highscore.perfect }}, 
-                    {{ highscore.great }}, 
-                    {{ highscore.good }}, 
-                    {{ highscore.miss }}
-                </p>
-            </li>
-            {% endfor %}
-        </ul>
+        {% if highscores %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Player</th>
+                        <th>Score</th>
+                        <th>Max Combo</th>
+                        <th>Accuracy</th>
+                        <th>300</th>
+                        <th>100</th>
+                        <th>50</th>
+                        <th>Miss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for highscore in highscores %}
+                    <tr class="{% if forloop.counter == 1 %}rank-1{% elif forloop.counter == 2 %}rank-2{% elif forloop.counter == 3 %}rank-3{% endif %}">
+                        <td>#{{ forloop.counter }}</td>  
+                        <td>{{ highscore.user.username }}</td> 
+                        <td>{{ highscore.total_score }}</td>
+                        <td>{{ highscore.highest_combo }}</td>
+                        <td>{{ highscore.accuracy }}%</td>
+                        <td>{{ highscore.perfect }}</td>
+                        <td>{{ highscore.great }}</td>
+                        <td>{{ highscore.good }}</td>
+                        <td>{{ highscore.miss }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-scores-message">No one has played the Beatmap yet.</p>
+        {% endif %}
     </section>
-
-    <section class="play-button">
-    <form method="POST" action="{% url 'play' beatmap_id=beatmap.beatmap_id %}">
-        {% csrf_token %}
-        <input type="hidden" name="user" value="{{ user.user_id }}">
-        <input type="hidden" name="beatmap" value="{{ beatmap.beatmap_id }}">
-        <input type="hidden" name="mapmaker" value="{{ beatmap.mapmaker_id }}">
-        <input type="hidden" name="beatpack" value="{{ beatpack.beatpack_id }}">
-        <label for="total_score">Total Score:</label>
-        <input type="number" id="total_score" name="total_score" required>
-
-        <label for="highest_combo">Highest Combo:</label>
-        <input type="number" id="highest_combo" name="highest_combo" required>
-
-        <label for="accuracy">Accuracy:</label>
-        <input type="number" step="0.01" id="accuracy" name="accuracy" required>
-
-        <label for="perfect">Perfect:</label>
-        <input type="number" id="perfect" name="perfect" required>
-
-        <label for="great">Great:</label>
-        <input type="number" id="great" name="great" required>
-
-        <label for="good">Good:</label>
-        <input type="number" id="good" name="good" required>
-
-        <label for="miss">Miss:</label>
-        <input type="number" id="miss" name="miss" required>
-        
-
-        <button type="submit" class="play-button">Play</button>
-        
-    </form>
-</section>
 
 </body>
 </html>
